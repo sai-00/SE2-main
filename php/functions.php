@@ -17,9 +17,9 @@ function insterPos(){
 			echo "<script> window.open('home.php','_self')</script>";
 		}else{
 			if(strlen($upload_image) >=  && strlen($content) >= 1){
-				
+
 				move_uploaded_files($image_tmp, "imagepost/$upload_image.$random_number")
-				
+
 				$insert = "insert into posts (user_id, post_content, upload_image, post_data,) 
 				values('$user_id', '$content', '$upload_image.$random_number', NOW())";
 
@@ -43,7 +43,7 @@ function insterPos(){
 
 						$insert = "insert into posts (user_id, post_content, upload_image, post_data) 
 						values('$user_id', '$content', '$upload_image.$random_number', NOW())";					}
-						
+
 						$run = mysqli_query($con, $insert);
 
 				if($run){
@@ -57,7 +57,7 @@ function insterPos(){
 				}else{
 					$insert = "insert into posts (user_id, post_content, upload_image, post_data) 
 						values('$user_id', 'No', NOW())";					}
-						
+
 						$run = mysqli_query($con, $insert);
 
 				if($run){

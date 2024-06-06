@@ -57,22 +57,54 @@
     const db = getFirestore(app);
 
     // Function to check authentication state
+    // Function to check authentication state
     const checkAuthState = () => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in
-                console.log('User is signed in:', user);
-            } else {
-                // User is not signed in
-                console.log('User is not signed in.');
-                //Redirect to login page
-                window.location.href = 'login.php';
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // User is signed in
+                    console.log('User is signed in:', user);
+
+                    // Fetch users from Firestore and render them
+                    await fetchUsers();
+                } else {
+                    // User is not signed in
+                    console.log('User is not signed in.');
+                    // Redirect to login page
+                    window.location.href = 'login.php';
+                }
+            });
+        };
+
+        // Function to fetch users from Firestore
+        const fetchUsers = async () => {
+            try {
+                const usersRef = collection(db, 'users');
+                const querySnapshot = await getDocs(usersRef);
+
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    renderUser(userData);
+                });
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                alert('Failed to fetch users. Please try again later.');
             }
-        });
-    };
+        };
 
-    checkAuthState();
+        // Function to render user data on the page
+        const renderUser = (userData) => {
+            const userListDiv = document.getElementById('user-list');
+            const userCard = document.createElement('div');
+            userCard.classList.add('user-card');
+            userCard.innerHTML = `
+                <h3>${userData.username}</h3>
+                <p>Email: ${userData.email}</p>
+            `;
+            userListDiv.appendChild(userCard);
+        };
 
+        // Check authentication state on page load
+        checkAuthState();
 </script>
 </body>
 </html>
