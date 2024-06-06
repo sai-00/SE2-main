@@ -31,7 +31,7 @@
                     <hr>
                     <div class="text-for-redirect">
                         <p>not yet a member ?</p>
-                        <a href="signup.html">sign up here</a>
+                        <a href="signup.php">sign up here</a>
                     </div>
                 </div>
             </section>

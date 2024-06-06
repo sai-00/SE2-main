@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php
-include ("php/functions.php");
-?>
 <head>
     <title>Pawpedia - Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -30,7 +27,8 @@ include ("php/functions.php");
         </section>
     
         <section class="main-content">
-        <form action="index.php" method="post" enctype="multipart/form-data">
+            <div class = "posting form">
+            <form action="index.php" method="post" enctype="multipart/form-data">
                 <label for="image">Choose an image:</label>
                 <input type="file" name="image" id="image" required>
                 <br><br>
@@ -39,6 +37,8 @@ include ("php/functions.php");
                 <br><br>
                 <button type="submit">Post</button>
             </form>
+            </div>
+        
 
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -95,7 +95,7 @@ include ("php/functions.php");
             if ($postData) {
             echo "<div>
                 ";
-                echo "<img src='" . htmlspecialchars($postData[' image']) . "' alt='Post Image' style='width:300px;height:auto;'><br>" ;
+                echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image' style='width:300px;height:auto;'><br>" ;
                            echo "<p>" . htmlspecialchars($postData['text']) . "</p>" ;
                            echo "</div><br>" ;
                            }
