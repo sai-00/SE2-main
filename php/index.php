@@ -17,9 +17,10 @@ include ("php/functions.php");
         </div>
         
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="#about">Sec1</a>
-            <a href="#contact">Sec2</a>
+            <a href="index.php">Home</a>
+            <a href="users.php">Users</a>
+            <a href="profile.php">Profile</a>
+            <a href="#" id="logout">Logout</a>
         </div>
     </nav>
 
@@ -74,8 +75,6 @@ include ("php/functions.php");
             if (user) {
                 // User is signed in
                 console.log('User is signed in:', user);
-                // Optionally redirect to dashboard or another authenticated page
-                window.location.href = 'index.php';
             } else {
                 // User is not signed in
                 console.log('User is not signed in.');
@@ -92,6 +91,34 @@ include ("php/functions.php");
 
         // Check authentication state on page load
         checkAuthState();
+    });
+
+    const logout = () => {
+        firebase.auth().signOut().then(() => {
+            // Sign-out successful.
+            console.log('User signed out.');
+            // Redirect to login page or any other page
+            window.location.href = '/login.php';
+        }).catch((error) => {
+            // An error happened.
+            console.error('Sign out error:', error);
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Check if Firebase is loaded
+        console.log('Firebase is loaded successfully.');
+
+        // Logout link event listener
+        const logoutLink = document.getElementById('logout');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                logout(); // Call logout function
+            });
+        } else {
+            console.error('Logout link element not found.');
+        }
     });
 </script>
 </body>
