@@ -49,6 +49,7 @@ nav.top-navbar
     display: flex; 
     flex-grow: 1; 
     padding-top: 55px; 
+    overflow-y: auto;
 }
 
 section.left-sidebar 
@@ -57,6 +58,7 @@ section.left-sidebar
     width: 220px; 
     padding: 10px;
     text-align: center;
+    overflow-y: auto;
 }
 
 section.right-sidebar 
@@ -65,6 +67,7 @@ section.right-sidebar
     width: 220px; 
     padding: 10px;
     text-align: center;
+    overflow-y: auto;
 }
 
 section.main-content 
@@ -74,4 +77,10 @@ section.main-content
     overflow-y: auto; 
     background-color: #efe6d4;
     text-align: center; 
+}
+
+div.posts
+{
+    overflow-y: scroll;
+    max-height: 50%;
 }

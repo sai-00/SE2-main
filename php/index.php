@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <title>Pawpedia - Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" ></script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.78/Build/Cesium/Cesium.js"></script>
     <link rel="stylesheet" href="../css/site_layout.css">
 </head>
@@ -21,6 +20,10 @@
         </div>
     </nav>
 
+    <div class="search-bar">
+
+    </div>
+
     <div class="content-container">
         <section class="left-sidebar">
             
@@ -28,9 +31,10 @@
     
         <section class="main-content">
             <div class = "posting-form">
+                <br><br>
             <form action="index.php" method="post" enctype="multipart/form-data">
                 <textarea name="text" id="text" rows="4" cols="50" placeholder="Enter your text" required></textarea>
-                <br><br>
+                <br>
                 <label for="image">Choose an image:</label>
                 <input type="file" name="image" id="image" required>
                 <br><br>
@@ -38,8 +42,8 @@
             </form>
             <br><br>
             </div>
-        
-
+            <hr>
+            <div class="posts">
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $uploadDir = 'uploads/';
@@ -95,15 +99,16 @@
             if ($postData) {
             echo "<div>
                 ";
-                echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image' style='width:300px;height:auto;'><br>" ;
+                echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image' style='width:800px;height:auto;'><br>" ;
                            echo "<p>" . htmlspecialchars($postData['text']) . "</p>" ;
-                           echo "</div><br>" ;
+                           echo "</div><hr><br>" ;
                            }
                            }
                            } else {
                            echo "<h2>No posts available.</h2>" ;
                            }
                            ?>
+            </div>
         </section>
     
         <section class="right-sidebar">
