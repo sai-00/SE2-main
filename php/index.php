@@ -27,16 +27,16 @@
         </section>
     
         <section class="main-content">
-            <div class = "posting form">
+            <div class = "posting-form">
             <form action="index.php" method="post" enctype="multipart/form-data">
+                <textarea name="text" id="text" rows="4" cols="50" placeholder="Enter your text" required></textarea>
+                <br><br>
                 <label for="image">Choose an image:</label>
                 <input type="file" name="image" id="image" required>
                 <br><br>
-                <label for="text">Enter your text:</label>
-                <textarea name="text" id="text" rows="4" cols="50" required></textarea>
-                <br><br>
                 <button type="submit">Post</button>
             </form>
+            <br><br>
             </div>
         
 
