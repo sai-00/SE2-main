@@ -82,5 +82,27 @@ section.main-content
 div.posts
 {
     overflow-y: scroll;
-    max-height: 50%;
+    max-height: 70%;
+}
+
+.posts p
+{
+    font-size: 20px;
+}
+
+.posts img
+{
+    width: 30%;
+    height: auto;
+} 
+
+div.post_content
+{
+    padding: 20px;
+    border: #1b1815;
+}
+
+div.search-bar
+{
+    background-color: #cb7615;
 }
