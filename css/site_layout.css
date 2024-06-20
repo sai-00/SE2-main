@@ -52,7 +52,7 @@ nav.top-navbar
     overflow-y: auto;
 }
 
-section.left-sidebar 
+/* section.left-sidebar 
 {
     background-color: #dba181;
     width: 220px; 
@@ -68,21 +68,27 @@ section.right-sidebar
     padding: 10px;
     text-align: center;
     overflow-y: auto;
-}
+} */
 
 section.main-content 
-{
-    flex-grow: 1; 
-    padding: 20px; 
+{   
+    padding-top: 20px;
     overflow-y: auto; 
     background-color: #efe6d4;
     text-align: center; 
+    display: flex;
 }
 
 div.posts
 {
     overflow-y: scroll;
-    max-height: 70%;
+    max-height: 100%;
+    display: flex;
+    padding: 20px;
+    margin-top: 50px;
+    flex-wrap: wrap;
+    gap: 18px; 
+    justify-content: center;
 }
 
 .posts p
@@ -92,17 +98,181 @@ div.posts
 
 .posts img
 {
-    width: 30%;
+    width: 40%;
     height: auto;
 } 
 
 div.post_content
 {
-    padding: 20px;
+    padding: 10px;
     border: #1b1815;
+    background-color: #cb7615;
+    flex: 1;
+    height: 100%;
+    width: 100%;
 }
 
 div.search-bar
 {
-    background-color: #cb7615;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.search-bar button
+{
+    background-color: #7ca4e6;
+    color: white;
+    margin: 10px;
+    margin-top: 20px;
+    padding: 10px;
+    width: 30%; 
+    border: none; 
+    cursor: pointer;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar button:hover
+{
+    background-color: #6660c1; 
+    transition: 0.3s;
+}
+
+div.posting-form
+{
+    padding: 15px;
+    margin-right: 15px;
+    background-color: #dba181;
+}
+
+.posting-form button
+{
+    background-color: #7ca4e6;
+    color: white;
+    margin: 10px;
+    margin-top: 20px;
+    padding: 10px;
+    width: 30%; 
+    border: none; 
+    cursor: pointer;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.posting-form button:hover
+{
+    background-color: #6660c1; 
+    transition: 0.3s;
+}
+
+.tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+/* Individual post tile */
+.post-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.post-tile img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px 8px 0 0;
+}
+
+.post-details {
+    padding: 10px;
+}
+
+.post-details p {
+    margin: 7px 0;
+}
+
+.post-details button {
+    background-color: #7ca4e6;
+    color: white;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin: 10px;
+    padding: 15px;
+    width: 30%; 
+    border: none; 
+    cursor: pointer;
+    align-items: center;
+    align-content: center;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.post-details button:hover {
+    background-color: #6660c1; 
+    transition: 0.3s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tiles {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .tiles {
+        grid-template-columns: 1fr;
+    }
+}
+
+#search
+{
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 13px;
+}
+
+#text
+{
+    border-radius: 20px;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+#tags
+{
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.wiki-entry-tile {
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-top: 16px;
+    text-align: center;
+}
+
+.wiki-entry-tile img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.wiki-entry-tile h3 {
+    margin-top: 0;
+}
+
+.wiki-entry-tile p {
+    margin: 8px 0;
 }
