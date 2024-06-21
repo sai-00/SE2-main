@@ -102,7 +102,9 @@
                     <button type="submit">Post</button>
                 </form>
                 <br><br>
-                <div id="wiki-entry" class="wiki-entry"></div>
+                <div id="wiki-entry" class="wiki-entry">
+
+                </div>
             </div>
 
             <div class="posts">
@@ -148,10 +150,13 @@
                         'id' => uniqid(),
                         'image' => $uploadFile,
                         'text' => $text,
-                        'tags' => $tagArray
+                        'tags' => $tagArray,
+                        'likes' => 0
                     ];
 
                     file_put_contents('posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);
+
+                    
                 }
 
                 // Display the uploaded posts
@@ -173,7 +178,8 @@
                             echo "<p><strong>Tags:</strong> " . implode(', ', $postData['tags']) . "</p>";
                             echo "<form method='post' action='index.php'>";
                             echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
-                            echo "<button type='submit'>Like</button>";
+                            echo "<button type='submit' name='like' value='" . htmlspecialchars($postData['id']) . "'>Like</button>";
+                            echo "<span>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
                             echo "</form>";
                             echo "</div>"; // Close post-details
                             echo "</div>"; // Close post-tile
@@ -182,9 +188,11 @@
                 }
                 echo "</div>"; // Close tiles
                 } else {
-                    echo "<h2>No posts available.</h2>";
+                    echo "<div class='post-tile'>";
+                    echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
+                    echo "<p>Image not available</p>"; // Provide alternative content
+                    echo "</div>"; // Close post-tile
                 }
-
                 ?>
             </div>
         </section>
