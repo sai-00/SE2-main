@@ -4,6 +4,7 @@
     <title>Pawpedia - Profile</title>
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/profile.css">
+    <script src="../js/nav.js"></script>
 </head>
 <body>
     <nav class="top-navbar">
@@ -18,13 +19,7 @@
         </div>
     </nav>
 
-    <div class="content-container">
-        <section class="left-sidebar">
-            
-        </section>
-
-        <section class="main-content">
-            <div class="profile-header">
+    <div class="profile-header">
                 <div class="profile-banner"><img src="#" alt="banner"></div>
                 <div class="profile-info">
                     <img src="#" alt="Profile" class="profile-pic">
@@ -38,12 +33,5 @@
                     </div>
                 </div>
             </div>
-            <hr>
-        </section>
-
-        <section class="right-sidebar">
-            
-        </section>
-    </div>
 </body>
 </html>

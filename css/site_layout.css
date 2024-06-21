@@ -52,24 +52,6 @@ nav.top-navbar
     overflow-y: auto;
 }
 
-/* section.left-sidebar 
-{
-    background-color: #dba181;
-    width: 220px; 
-    padding: 10px;
-    text-align: center;
-    overflow-y: auto;
-}
-
-section.right-sidebar 
-{
-    background-color: #dba181;
-    width: 220px; 
-    padding: 10px;
-    text-align: center;
-    overflow-y: auto;
-} */
-
 section.main-content 
 {   
     padding-top: 20px;
