@@ -1,0 +1,75 @@
+.signup-box 
+{
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    width: 450px; 
+    background-color: #efefef; 
+    padding: 20px; 
+    border: 1px solid #ccc; 
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
+    text-align: center; 
+    border-radius: 10px;
+    padding: 40px 20px; 
+    height: 435px;
+}
+
+.signup-box input 
+{
+    width: 60%; 
+    padding: 15px; 
+    margin-bottom: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 20px;
+}
+
+.signup-box button 
+{
+    background-color: #7ca4e6; 
+    color: white;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 15px;
+    width: 60%; 
+    border: none; 
+    cursor: pointer;
+    align-items: center;
+    align-content: center;
+    border-radius: 20px;
+}
+
+.signup-box button:hover 
+{
+    background-color: #6660c1; 
+    transition: 0.3s;
+}
+
+.header
+{
+    position: absolute;
+    bottom: 78%; 
+    text-align: center;
+    font-size: 35px;
+    color: #1b1815; 
+    font-weight: bold; 
+    transform: translateX(-50%);
+    left: 50%; 
+}
+
+.text-for-redirect
+{
+    padding: 10px;
+    text-align: center;
+    align-items: center;
+}
+
+.signup-box a {
+    color: inherit; 
+    text-decoration: underline; 
+    cursor: pointer;
+}
+
+.signup-box a:hover{
+    color: #7ca4e6; 
+}
