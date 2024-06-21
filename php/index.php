@@ -21,6 +21,12 @@
             background-color: rgba(0,0,0,0.9);
         }
 
+        .modal img 
+        {
+            width: 75%;
+            height: 50%;
+        }
+
         .modal-content {
             margin: 10% auto;
             padding: 20px;
