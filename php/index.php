@@ -40,12 +40,6 @@
             cursor: pointer;
         }
 
-        .modal img
-        {
-            width: 85%;
-            height: 85%;
-        }
-
         .post {
             margin: 20px;
             border: 1px solid #ccc;
@@ -160,7 +154,9 @@
                         'likes' => 0
                     ];
 
-                    file_put_contents('posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);                    
+                    file_put_contents('posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);
+
+                    
                 }
 
                 // Display the uploaded posts
@@ -271,10 +267,10 @@
     });
 
     window.clearSearch = function() {
-            window.location.href = 'index.php';
-        };
+        window.location.href = 'index.php';
+    };
 
-        window.searchPosts = function() {
+    window.searchPosts = function() {
             const searchInput = document.getElementById('search').value;
             console.log('Search input:', searchInput); // Log search input
             if (searchInput) {
@@ -284,7 +280,7 @@
                 alert('Please enter a tag to search for.');
             }
         };
-
+        
         async function fetchWikiEntry(term) {
             console.log('Fetching Wikipedia entry for:', term); // Log the search term
             try {
@@ -305,20 +301,12 @@
         function displayWikiEntry(data) {
             console.log('Displaying Wikipedia entry:', data); // Log the data to be displayed
             const wikiEntryDiv = document.getElementById('wiki-entry');
-            const careKeywords = ["care", "care tips", "health", "grooming"];
-            const funFactsKeywords = ["fun facts", "interesting facts", "trivia", "did you know"];
-
             if (data.type === "standard") {
-                let careContent = careKeywords.some(keyword => data.extract.toLowerCase().includes(keyword.toLowerCase()));
-                let funFactsContent = funFactsKeywords.some(keyword => data.extract.toLowerCase().includes(keyword.toLowerCase()));
-
                 wikiEntryDiv.innerHTML = `
                     <div class="wiki-entry-tile">
                         <h3>${data.title}</h3>
                         <img src="${data.thumbnail ? data.thumbnail.source : ''}" alt="${data.title} Thumbnail">
                         <p>${data.extract}</p>
-                        ${careContent ? `<p><strong>Care Information:</strong> ${data.extract}</p>` : ''}
-                        ${funFactsContent ? `<p><strong>Fun Facts:</strong> ${data.extract}</p>` : ''}
                         <a href="${data.content_urls.desktop.page}" target="_blank">Read more on Wikipedia</a>
                     </div>
                 `;

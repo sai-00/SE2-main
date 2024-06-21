@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalText = document.getElementById('modalText');
 
     // Function to open the modal with post details
-    function openModal(imageSrc, text) {
+    window.openModal = function(imageSrc, text) {
         console.log('Opening modal with image:', imageSrc, 'and text:', text);
         modalImage.src = imageSrc;
         modalText.textContent = text;
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to close the modal
-    function closeModal() {
+    window.closeModal = function() {
         modal.style.display = "none";
     }
 
