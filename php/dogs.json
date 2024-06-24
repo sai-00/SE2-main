@@ -1,0 +1,14 @@
+[
+    {
+        "id": "Shih tzu",
+        "image": "uploads/image1.jpg",
+        "text": "Shih tzu"
+    },
+    {
+        "id": "2",
+        "image": "uploads/image2.jpg",
+        "text": "This is the second post."
+
+    }
+
+]

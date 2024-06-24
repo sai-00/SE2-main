@@ -90,7 +90,8 @@
 
             <div class = "posting-form">
                 <div class="search-bar">
-                    <input type="text" id="search" placeholder="Search by tag">
+                    <label for="search">Select a breed:</label>
+                    <input type="text" id="search" name="search" placeholder="Search for breed">
                     <br>
                     <button onclick="searchPosts()">Search</button>
                     <button onclick="clearSearch()">Clear Search</button>
@@ -102,8 +103,25 @@
                     <label for="image">Choose an image:</label>
                     <input type="file" name="image" id="image" required>
                     <br><br><br>
-                    <label for="tags">Tags (comma-separated):</label>
-                    <input type="text" name="tags" id="tags" placeholder="e.g., dog, cute, animal" required>
+                    <label for="tags">Select breed:</label>
+                    <select id="tags" name="tags" required>
+                        <option value="">Select a breed</option>
+                        <option value="Shih Tzu">Shih Tzu</option>
+                        <option value="Shiba Inu">Shiba Inu</option>
+                        <option value="Pug">Pug</option>
+                        <option value="Corgi">Corgi</option>
+                        <option value="Beagle">Beagle</option>
+                        <option value="Yorkshire">Yorkshire</option>
+                        <option value="Pomeranian">Pomeranian</option>
+                        <option value="Toy Poodle">Toy Poodle</option>
+                        <option value="French Bulldog">French Bulldog</option>
+                        <option value="Golden Retriever">Golden Retriever</option>
+                        <option value="Labrador">Labrador</option>
+                        <option value="Borzoi">Borzoi</option>
+                        <option value="Dalmatian">Dalmatian</option>
+                        <option value="Chihuahua">Chihuahua</option>
+                        <option value="Husky">Husky</option>
+                    </select>
                     <br><br>
                     <button type="submit">Post</button>
                 </form>
@@ -149,6 +167,7 @@
                     $text = htmlspecialchars($_POST['text']);
                     $tags = htmlspecialchars($_POST['tags']);
                     $tagArray = array_map('trim', explode(',', $tags));
+                    $tagArray = array_map('strtolower', $tagArray); // Convert tags to lowercase
 
                     // Save the post data (e.g., to a database or file)
                     // For simplicity, saving to a file
@@ -167,33 +186,34 @@
 
                 // Display the uploaded posts
                 $postsFile = 'posts.json';
-                $searchTag = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
-                
+                $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
+
                 if (file_exists($postsFile)) {
-                    $posts = array_reverse(file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
-                    echo "<div class='tiles'>";
-                    foreach ($posts as $post) {
-                    $postData = json_decode($post, true);
-                    if ($postData) {
-                        if (empty($searchTag) || in_array($searchTag, $postData['tags'])) {
-                            echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "')\">";
-                            echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
-                            echo "<div class='post-details'>";
-                            echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
-                            echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
-                            echo "<p><strong>Tags:</strong> " . implode(', ', $postData['tags']) . "</p>";
-                            echo "<form method='post' action='index.php'>";
-                            echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
-                            echo "<button type='submit' name='like' value='" . htmlspecialchars($postData['id']) . "'>Like</button>";
-                            echo "<span>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
-                            echo "</form>";
-                            echo "</div>"; // Close post-details
-                            echo "</div>"; // Close post-tile
+                $posts = array_reverse(file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+                echo "<div class='tiles'>";
+                foreach ($posts as $post) {
+                $postData = json_decode($post, true);
+                if ($postData) {
+            // Check if searchTag is empty or matches any tag in $postData['tags']
+                if (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags']))) {
+                        echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData    ['text']) . "')\">";
+                        echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
+                        echo "<div class='post-details'>";
+                        echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
+                        echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
+                        echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
+                        echo "<form method='post' action='index.php'>";
+                        echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
+                        echo "<button type='submit' name='like' value='" . htmlspecialchars($postData['id']) . "'>Like</button>";
+                        echo "<span>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
+                        echo "</form>";
+                        echo "</div>"; // Close post-details
+                        echo "</div>"; // Close post-tile
                         }
                     }
                 }
-                echo "</div>"; // Close tiles
-                } else {
+                    echo "</div>"; // Close tiles
+                }else {
                     echo "<div class='post-tile'>";
                     echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                     echo "<p>Image not available</p>"; // Provide alternative content
@@ -272,58 +292,20 @@
         }
     });
 
-    window.clearSearch = function() {
-        window.location.href = 'index.php';
-    };
+     window.clearSearch = function() {
+         window.location.href = 'index.php';
+     };
 
     window.searchPosts = function() {
-            const searchInput = document.getElementById('search').value;
-            console.log('Search input:', searchInput); // Log search input
-            if (searchInput) {
-                fetchWikiEntry(searchInput);
-                window.location.href = `index.php?search=${encodeURIComponent(searchInput)}`;
-            } else {
-                alert('Please enter a tag to search for.');
-            }
-        };
+             const searchInput = document.getElementById('search').value.trim();
+             console.log('Search input:', searchInput); // Log search input
+             if (searchInput) {
+                 window.location.href = `index.php?search=${encodeURIComponent(searchInput)}`;
+             } else {
+                 alert('Please enter a tag to search for.');
+             }
+         };
         
-        async function fetchWikiEntry(term) {
-            console.log('Fetching Wikipedia entry for:', term); // Log the search term
-            try {
-                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`);
-                console.log('Response received:', response); // Log the response object
-                if (!response.ok) {
-                    console.error(`HTTP error! Status: ${response.status}`);
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('Data received:', data); // Log the response data
-                displayWikiEntry(data);
-            } catch (error) {
-                console.error('Error fetching Wikipedia entry:', error);
-            }
-        }
-
-        function displayWikiEntry(data) {
-            console.log('Displaying Wikipedia entry:', data); // Log the data to be displayed
-            const wikiEntryDiv = document.getElementById('wiki-entry');
-            if (data.type === "standard") {
-                wikiEntryDiv.innerHTML = `
-                    <div class="wiki-entry-tile">
-                        <h3>${data.title}</h3>
-                        <img src="${data.thumbnail ? data.thumbnail.source : ''}" alt="${data.title} Thumbnail">
-                        <p>${data.extract}</p>
-                        <a href="${data.content_urls.desktop.page}" target="_blank">Read more on Wikipedia</a>
-                    </div>
-                `;
-            } else {
-                wikiEntryDiv.innerHTML = `<p>No Wikipedia entry found for "${data.title}".</p>`;
-            }
-        }
-
-        window.clearSearch = function() {
-            window.location.href = 'index.php';
-        };
 </script>
 </body>
 </html>
