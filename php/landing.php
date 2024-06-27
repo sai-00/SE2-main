@@ -62,6 +62,17 @@
             display: block;
             margin-bottom: 10px;
         }
+
+        .posting-form
+        {
+            padding: 20px;
+            padding-left: 50px;
+        }
+
+        button
+        {
+            padding: 20px;
+        }
     </style>
 
 </head>
@@ -72,10 +83,8 @@
         </div>
         
         <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="users.php">Users</a>
-            <a href="profile.php">Profile</a>
-            <a href="#" id="logout">Logout</a>
+            <a href="signup.php">Signup</a>
+            <a href="login.php">Login</a>
         </div>
     </nav>
 
@@ -97,39 +106,6 @@
                     <br>
                     <button onclick="searchPosts()">Search</button>
                     <button onclick="clearSearch()">Clear Search</button>
-                </div>
-                <br><br>
-                <form action="index.php" method="post" enctype="multipart/form-data">
-                    <textarea name="text" id="text" rows="4" cols="50" placeholder="Enter your text" required></textarea>
-                    <br>
-                    <label for="image">Choose an image:</label>
-                    <input type="file" name="image" id="image" required>
-                    <br><br><br>
-                    <label for="tags">Select breed:</label>
-                    <select id="tags" name="tags" required>
-                        <option value="">Select a breed</option>
-                        <option value="Shih Tzu">Shih Tzu</option>
-                        <option value="Shiba Inu">Shiba Inu</option>
-                        <option value="Pug">Pug</option>
-                        <option value="Corgi">Corgi</option>
-                        <option value="Beagle">Beagle</option>
-                        <option value="Yorkshire">Yorkshire</option>
-                        <option value="Pomeranian">Pomeranian</option>
-                        <option value="Poodle">Toy Poodle</option>
-                        <option value="Bulldog">French Bulldog</option>
-                        <option value="Golden Retriever">Golden Retriever</option>
-                        <option value="Labrador">Labrador</option>
-                        <option value="Borzoi">Borzoi</option>
-                        <option value="Dalmatian">Dalmatian</option>
-                        <option value="Chihuahua">Chihuahua</option>
-                        <option value="Husky">Husky</option>
-                    </select>
-                    <br><br>
-                    <button type="submit">Post</button>
-                </form>
-                <br><br>
-                <div id="wiki-entry" class="wiki-entry">
-
                 </div>
             </div>
 
@@ -181,7 +157,7 @@
                         'likes' => 0
                     ];
 
-                    file_put_contents('../json/posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);
+                    file_put_contents('posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);
 
                     
                 }
@@ -209,7 +185,7 @@
                                 echo "<p><strong>Breed:</strong> " . htmlspecialchars($dogData['breed']) . "</p>";
                                 echo "<br><br>";
                                 echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dogData['breed']) . " information.</p>";
-                                echo "<button onclick=\"window.location.href='dog_details.php?search=" . urlencode($dogData['breed']) . "'\">Read More</button>";
+                                echo "<button onclick=\"window.location.href='landing_dog_details.php?search=" . urlencode($dogData['breed']) . "'\">Read More</button>";
                                 echo "</div>"; 
                                 echo "</div>"; 
                             }
@@ -246,34 +222,15 @@
         </section>
         
     <script type="module">
-    function logout() {
-    
-    window.location.href="login.php"
-    sessionStorage.clear()
-    }
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var logoutLink = document.getElementById('logout');
-        if (logoutLink) {
-            logoutLink.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default link behavior
-                logout(); // Call logout function
-            });
-        } else {
-            console.error('Logout link element not found.');
-        }
-    });
-
      window.clearSearch = function() {
-         window.location.href = 'index.php';
+         window.location.href = 'landing.php';
      };
 
     window.searchPosts = function() {
              const searchInput = document.getElementById('search').value.trim();
              console.log('Search input:', searchInput); // Log search input
              if (searchInput) {
-                 window.location.href = `index.php?search=${encodeURIComponent(searchInput)}`;
+                 window.location.href = `landing.php?search=${encodeURIComponent(searchInput)}`;
              } else {
                  alert('Please enter a tag to search for.');
              }

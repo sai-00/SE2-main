@@ -11,15 +11,13 @@
             <strong>Pawpedia</strong>
         </div>
         <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="users.php">Users</a>
-            <a href="profile.php">Profile</a>
-            <a href="#" id="logout">Logout</a>
+            <a href="signup.php">Signup</a>
+            <a href="login.php">Login</a>
         </div>
     </nav>
 
     <div class="breadcrumb">
-        <a href="index.php"> < Back</a>
+        <a href="landing.php"> < Back</a>
     </div>
 
     <section class="main-content">

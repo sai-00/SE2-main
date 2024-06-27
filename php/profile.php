@@ -26,12 +26,18 @@
                     <div class="profile-details">
                         <div class="profile-text">
                             <h1>Username</h1>
-                            <p>@username</p>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                         </div>
-                        <button class="edit-profile-btn">Edit Profile</button>
+                        <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
                     </div>
                 </div>
             </div>
+
+        <script>
+            function editProfile()
+            {
+                    
+            }
+        </script>
 </body>
 </html>
