@@ -202,10 +202,10 @@
                         foreach ($dogs as $dog) {
                             $dogData = json_decode($dog, true);
                             if ($dogData && is_array($dogData) && strtolower($dogData['breed']) === strtolower($searchTag)) {
-                                echo "<div class='post-tile'" . htmlspecialchars($dogData['image']) . "', '')\" >";
+                                echo "<div class='post-tile'" . htmlspecialchars($dogData['image']) . "', '')\" style='background-color: #dba181;'>";
                                 echo "<img src='" . htmlspecialchars($dogData['image']) . "' alt='Dog Image'>";
                                 echo "<div class='post-details'>";
-                                echo "<p><strong>Wiki Entry!</strong></p>";
+                                echo "<p><strong><u>Wiki Entry!</u></strong></p>";
                                 echo "<p><strong>Breed:</strong> " . htmlspecialchars($dogData['breed']) . "</p>";
                                 echo "<br><br>";
                                 echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dogData['breed']) . " information.</p>";

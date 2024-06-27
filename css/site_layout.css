@@ -164,6 +164,10 @@ div.posting-form
     cursor: pointer;
 }
 
+.post-tile.wiki-entry-tile {
+    background-color: #dba181; /* Adjusted background color */
+}
+
 .post-tile img {
     display: block;
     width: 100%;

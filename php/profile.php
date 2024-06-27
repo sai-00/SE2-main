@@ -15,7 +15,7 @@
             <a href="index.php">Home</a>
             <a href="users.php">Users</a>
             <a href="profile.php">Profile</a>
-            <a href="">Logout</a>
+            <a href="#" id="logout">Logout</a>
         </div>
     </nav>
 
