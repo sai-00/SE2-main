@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="../css/profile.css">
     <script src="../js/nav.js"></script>
     <style>
-        .logo a
-        {
+        .logo a {
             text-decoration: none;
             color: white;
         }
@@ -16,7 +15,7 @@
 <body>
     <nav class="top-navbar">
         <div class="logo">
-        <a href="index.php"><strong>Pawpedia</strong></a>
+            <a href="index.php"><strong>Pawpedia</strong></a>
         </div>
         <div class="nav-links">
             <a href="index.php">Home</a>
@@ -40,24 +39,69 @@
     ?>
 
     <div class="profile-header">
-                <div class="profile-banner"><img src="#" alt="banner"></div>
-                <div class="profile-info">
-                    <img src="#" alt="Profile" class="profile-pic">
-                    <div class="profile-details">
-                        <div class="profile-text">
-                            <h1><?php echo htmlspecialchars($username); ?></h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                        </div>
-                        <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
-                    </div>
-                </div>
+        <div class="profile-banner"><img src="#" alt="banner"></div>
+        <div class="profile-info">
+            <img src="../img/braver-blank-php.jpg" alt="Profile" class="profile-pic">
+            <div class="profile-details">
+            <div class="profile-text">
+                <h1 id="currentUsername"><?php echo htmlspecialchars($username); ?></h1>
             </div>
+
+                <form id="editProfileForm" onsubmit="return editProfile()">
+                    <label for="newUsername">New Username:</label>
+                    <input type="text" id="newUsername" name="newUsername" required><br><br>
+                    <label for="newPassword">New Password:</label>
+                    <input type="password" id="newPassword" name="newPassword" required><br><br>
+                    <button type="submit">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
         <script>
-            function editProfile()
-            {
-                
+    function editProfile() {
+        const newUsername = document.getElementById('newUsername').value;
+        const newPassword = document.getElementById('newPassword').value;
+
+        // Example validation (you should add more robust validation)
+        if (!newUsername || !newPassword) {
+            alert('Please fill in all fields.');
+            return false;
+        }
+
+        // Example: Sending data to the server (you can use fetch or AJAX)
+        const formData = new FormData();
+        formData.append('newUsername', newUsername);
+        formData.append('newPassword', newPassword);
+
+        fetch('update_profile.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        </script>
-        
+            return response.json();
+        })
+        .then(data => {
+            // Handle success or display a message
+            alert('Profile updated successfully!');
+            
+            // Update username displayed on the page
+            document.getElementById('currentUsername').innerText = newUsername;
+        })
+        .catch(error => {
+            console.error('Error updating profile:', error);
+            alert('Failed to update profile. Please try again.');
+        });
+
+        return false; // Prevent form submission
+    }
+</script>
+
+
+
 </body>
 </html>
