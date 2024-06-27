@@ -1,3 +1,4 @@
+@ -0,0 +1,128 @@
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,16 +25,17 @@
                 </div>
 
                 <div class="signup-box">
+                <form method="POST" action="signup.php">
                     <h1>Register</h1>
-                    <input type="text" placeholder="Username" id="username">
-                    <input type="text" placeholder="Email" id="email">
-                    <input type="password" placeholder="Password" id="password">
-                    <button onclick="signup()">Register</button>
+                    <input type="text" placeholder="Username" name="Username" id="Username">
+                    <input type="password" placeholder="Password" name="Password" id="Password">
+                    <button type="submit">Register</button>
                     <hr>
                     <div class="text-for-redirect">
                         <p>already a member ?</p>
-                        <a href="login.html">login here</a>
+                        <a href="login.php">login here</a>
                     </div>
+                </form>
                 </div>
             </section>
         
@@ -41,7 +43,39 @@
                 
             </section>
         </div>
-        <script type="module">
+        <?php
+           if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $username = trim($_POST['Username']);
+            $password = $_POST['Password'];
+        
+            if (empty($username) || empty($password)) {
+                echo "<script>alert('Username and password are required!');</script>";
+            } else {
+                $file = '../json/users.json';
+                $users = json_decode(file_get_contents($file), true);
+        
+                $userExists = false;
+                foreach ($users as $user) {
+                    if ($user['username'] == $username) {
+                        $userExists = true;
+                        break;
+                    }
+                }
+        
+                if ($userExists) {
+                    echo "<script>alert('Username already exists!');</script>";
+                } else {
+                    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    $users[] = ['username' => $username, 'password' => $hashedPassword];
+                    file_put_contents($file, json_encode($users));
+                    
+                    header('Location: login.php');
+                    exit; 
+                }
+            }
+        }
+        ?>
+        <!-- <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
@@ -90,6 +124,6 @@
             };
         });
         
-    </script>
+    </script> -->
     </body>
 </html>

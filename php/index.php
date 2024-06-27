@@ -113,8 +113,8 @@
                         <option value="Beagle">Beagle</option>
                         <option value="Yorkshire">Yorkshire</option>
                         <option value="Pomeranian">Pomeranian</option>
-                        <option value="Toy Poodle">Toy Poodle</option>
-                        <option value="French Bulldog">French Bulldog</option>
+                        <option value="Poodle">Toy Poodle</option>
+                        <option value="Bulldog">French Bulldog</option>
                         <option value="Golden Retriever">Golden Retriever</option>
                         <option value="Labrador">Labrador</option>
                         <option value="Borzoi">Borzoi</option>
@@ -184,99 +184,120 @@
                     
                 }
 
-                // Display the uploaded posts
-                $postsFile = 'posts.json';
-                $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
+                $postsFile = '../json/posts.json';
+                $dogsFile = '../json/dogs.json';
 
-                if (file_exists($postsFile)) {
-                $posts = array_reverse(file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
-                echo "<div class='tiles'>";
-                foreach ($posts as $post) {
-                $postData = json_decode($post, true);
-                if ($postData) {
-            // Check if searchTag is empty or matches any tag in $postData['tags']
-                if (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags']))) {
-                        echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData    ['text']) . "')\">";
-                        echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
-                        echo "<div class='post-details'>";
-                        echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
-                        echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
-                        echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
-                        echo "<form method='post' action='index.php'>";
-                        echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
-                        echo "<button type='submit' name='like' value='" . htmlspecialchars($postData['id']) . "'>Like</button>";
-                        echo "<span>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
-                        echo "</form>";
-                        echo "</div>"; // Close post-details
-                        echo "</div>"; // Close post-tile
+                if (file_exists($postsFile) || file_exists($dogsFile)) {
+                    $posts = file_exists($postsFile) ? array_reverse(file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) : [];
+                    $dogs = file_exists($dogsFile) ? file($dogsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
+                    
+                    $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
+
+                    echo "<div class='tiles'>";
+                    
+                    //display wiki entry
+                    if (!empty($searchTag)) {
+                        foreach ($dogs as $dog) {
+                            $dogData = json_decode($dog, true);
+                            if ($dogData && is_array($dogData) && strtolower($dogData['breed']) === strtolower($searchTag)) {
+                                echo "<div class='post-tile'" . htmlspecialchars($dogData['image']) . "', '')\" >";
+                                echo "<img src='" . htmlspecialchars($dogData['image']) . "' alt='Dog Image'>";
+                                echo "<div class='post-details'>";
+                                echo "<p><strong>Wiki Entry!</strong></p>";
+                                echo "<p><strong>Breed:</strong> " . htmlspecialchars($dogData['breed']) . "</p>";
+                                echo "<br><br>";
+                                echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dogData['breed']) . " information.</p>";
+                                echo "<button onclick=\"window.location.href='dog_details.php?search=" . urlencode($dogData['breed']) . "'\">Read More</button>";
+                                echo "</div>"; // Close post-details
+                                echo "</div>"; // Close post-tile
+                            }
+                        }
+    
+                    }
+                    
+                    //display user posts
+                    foreach ($posts as $post) {
+                        $postData = json_decode($post, true);
+                        if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
+                            echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "')\">";
+                            echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
+                            echo "<div class='post-details'>";
+                            echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
+                            echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
+                            echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
+                            echo "<form method='post' action='index.php'>";
+                            echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
+                            echo "<button type='submit' name='like' value='" . htmlspecialchars($postData['id']) . "'>Like</button>";
+                            echo "<span>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
+                            echo "</form>";
+                            echo "</div>"; // Close post-details
+                            echo "</div>"; // Close post-tile
                         }
                     }
-                }
+
                     echo "</div>"; // Close tiles
-                }else {
-                    echo "<div class='post-tile'>";
-                    echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
-                    echo "<p>Image not available</p>"; // Provide alternative content
-                    echo "</div>"; // Close post-tile
+                } else {
+                    echo "<p>No posts or dog entries available.</p>";
                 }
                 ?>
             </div>
         </section>
         
     <script type="module">
-    // Import the functions you need from the Firebase Auth SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    // // Import the functions you need from the Firebase Auth SDK
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    // import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // Your Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyBVPfjrG7iszVvFbTMigd2_mDM_ViY-XOQ",
-        authDomain: "pawpedia-d4569.firebaseapp.com",
-        databaseURL: "https://pawpedia-d4569-default-rtdb.firebaseio.com",
-        projectId: "pawpedia-d4569",
-        storageBucket: "pawpedia-d4569.appspot.com",
-        messagingSenderId: "792561362206",
-        appId: "1:792561362206:web:457b81696cb11c4445550f",
-        measurementId: "G-FEB9E1434F"
-    };
+    // // Your Firebase configuration
+    // const firebaseConfig = {
+    //     apiKey: "AIzaSyBVPfjrG7iszVvFbTMigd2_mDM_ViY-XOQ",
+    //     authDomain: "pawpedia-d4569.firebaseapp.com",
+    //     databaseURL: "https://pawpedia-d4569-default-rtdb.firebaseio.com",
+    //     projectId: "pawpedia-d4569",
+    //     storageBucket: "pawpedia-d4569.appspot.com",
+    //     messagingSenderId: "792561362206",
+    //     appId: "1:792561362206:web:457b81696cb11c4445550f",
+    //     measurementId: "G-FEB9E1434F"
+    // };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    // // Initialize Firebase
+    // const app = initializeApp(firebaseConfig);
+    // const auth = getAuth(app);
 
-    // Function to check authentication status
-    const checkAuthState = () => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in
-                console.log('User is signed in:', user);
-            } else {
-                // User is not signed in
-                console.log('User is not signed in.');
-                alert('Please sign in before using the site')
-                // Redirect to login page
-                window.location.href = 'login.php';
-            }
-        });
-    };
+    // // Function to check authentication status
+    // const checkAuthState = () => {
+    //     onAuthStateChanged(auth, (user) => {
+    //         if (user) {
+    //             // User is signed in
+    //             console.log('User is signed in:', user);
+    //         } else {
+    //             // User is not signed in
+    //             console.log('User is not signed in.');
+    //             alert('Please sign in before using the site')
+    //             // Redirect to login page
+    //             window.location.href = 'login.php';
+    //         }
+    //     });
+    // };
 
-    if (typeof firebase === 'undefined') {
-        console.error('Firebase SDK not loaded');
-    } else {
-        console.log('Firebase SDK loaded');
-    }
+    // if (typeof firebase === 'undefined') {
+    //     console.error('Firebase SDK not loaded');
+    // } else {
+    //     console.log('Firebase SDK loaded');
+    // }
 
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Check if Firebase is loaded
-        console.log('Firebase is loaded successfully.');
+    // document.addEventListener('DOMContentLoaded', (event) => {
+    //     // Check if Firebase is loaded
+    //     console.log('Firebase is loaded successfully.');
 
-        // Check authentication state on page load
-        checkAuthState();
-    });
+    //     // Check authentication state on page load
+    //     checkAuthState();
+    // });
 
     function logout() {
     
     window.location.href="login.php"
+    sessionStorage.clear()
     }
 
 

@@ -258,3 +258,20 @@ div.posting-form
 .wiki-entry-tile p {
     margin: 8px 0;
 }
+
+.breadcrumb { 
+    margin-top: 80px; 
+    margin-left: 20px;
+    font-size: 1.6em;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #333;
+}   
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+    color: #6660c1; 
+    transition: 0.3s;
+} 

@@ -1,6 +1,7 @@
 function logout() {
     
     window.location.href="login.php"
+    sessionStorage.clear()
     }
 
 

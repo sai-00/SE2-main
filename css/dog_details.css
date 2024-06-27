@@ -1,0 +1,56 @@
+body{
+    padding: 10px;
+}
+
+.dog-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.dog-info img {
+    width: 30%;
+    height: auto;
+    margin-left: 50px;
+    margin-top: 90px;
+    float: left;
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.details {
+    flex: 1;
+    padding: 50px;
+    margin: 10px;
+}
+
+.justify-text {
+    text-align: justify;
+    font-size: 1.2rem;
+}
+
+p
+{
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+h1
+{
+    font-size: 2.5rem;
+}
+
+.section-bg
+{
+    background-color: #dba181;
+    padding: 15px;
+    padding-right: 30px;
+    margin: 5px;
+    border-radius: 20px;
+}
+
+h2
+{
+    text-decoration: underline;
+}
+
