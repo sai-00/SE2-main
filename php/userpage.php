@@ -70,12 +70,19 @@
             background-color: #6660c1;
             transition: 0.3s;
         }
+
+        .logo a
+        {
+            text-decoration: none;
+            color: white;
+        }
+
     </style>
 </head>
 <body>
     <nav class="top-navbar">
         <div class="logo">
-            <strong>Pawpedia</strong>
+            <a href="index.php"><strong>Pawpedia</strong></a>
         </div>
         
         <div class="nav-links">

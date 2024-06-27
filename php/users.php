@@ -5,11 +5,18 @@
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/users.css">
     <script src="../js/nav.js"></script>
+    <style>
+        .logo a
+        {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <nav class="top-navbar">
         <div class="logo">
-            <strong>Pawpedia</strong>
+        <a href="index.php"><strong>Pawpedia</strong></a>
         </div>
         
         <div class="nav-links">

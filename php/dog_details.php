@@ -4,11 +4,18 @@
     <title>Pawpedia - Dog Details</title>
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/dog_details.css">
+    <style>
+        .logo a
+        {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <nav class="top-navbar">
         <div class="logo">
-            <strong>Pawpedia</strong>
+            <a href="index.php"><strong>Pawpedia</strong></a>
         </div>
         <div class="nav-links">
             <a href="index.php">Home</a>
