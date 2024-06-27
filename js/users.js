@@ -1,60 +1,55 @@
-// users.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch users from users.json
+    fetch('../json/users.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(users => {
+            const usersContainer = document.getElementById("user-list");
 
-// Array of users
-const userList = [
-    { id: 1, image: "../img/braver-blank-pfp.jpg", name: "yuh", description: "lorem ipsum" },
-    { id: 2, image: "../img/braver-blank-pfp.jpg", name: "yaur", description: "lorem ipsum" },
-    { id: 3, image: "../img/braver-blank-pfp.jpg", name: "hey", description: "lorem ipsum" },
-    { id: 4, image: "../img/braver-blank-pfp.jpg", name: "henl", description: "lorem ipsum" },
-    { id: 5, image: "../img/braver-blank-pfp.jpg", name: "aye", description: "lorem ipsum" },
-    { id: 6, image: "../img/braver-blank-pfp.jpg", name: "naur", description: "lorem ipsum" },
-    { id: 7, image: "../img/braver-blank-pfp.jpg", name: "womp", description: "lorem ipsum" },
-    { id: 8, image: "../img/braver-blank-pfp.jpg", name: "hronk", description: "lorem ipsum" },
-    { id: 9, image: "../img/braver-blank-pfp.jpg", name: "mimmi", description: "lorem ipsum" }
-];
+            // Iterates through each user and creates a card for it, then displays it in the users container
+            if (users && users.length > 0) {
+                users.forEach(user => {
+                    const card = createCard(user);
+                    usersContainer.appendChild(card);
+                });
+            } else {
+                usersContainer.innerHTML = "<p>No users available.</p>";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching users:", error);
+            const usersContainer = document.getElementById("user-list");
+            usersContainer.innerHTML = "<p>Error loading users.</p>";
+        });
 
-// Add to local storage
-localStorage.setItem("userList", JSON.stringify(userList));
-const userArray = localStorage.getItem("userList");
+    // Function to create a user card
+    function createCard(user) {
+        const card = document.createElement("div");
+        card.classList.add("usersCard");
 
-// Converts the text into an object
-const users = JSON.parse(userArray);
-console.log(users);
+        const image = document.createElement("img");
+        image.src = user.image || "../img/braver-blank-pfp.jpg"; 
+        card.appendChild(image);
 
-const usersContainer = document.getElementById("user-list");
+        const name = document.createElement("h2");
+        name.textContent = user.username;
+        card.appendChild(name);
 
-// Iterates through each item and creates a card for it then displays it in the users container
-if (users) {
-    users.forEach(user => {
-        const card = createCard(user);
-        usersContainer.appendChild(card);
-    });
-} else {
-    usersContainer.innerHTML = "<p>No user available.</p>";
-}
+        const description = document.createElement("p");
+        description.textContent = user.description || "No description available.";
+        card.appendChild(description);
 
-function createCard(user) {
-    const card = document.createElement("div");
-    card.classList.add("usersCard");
+        // const viewProfile = document.createElement("button");
+        // viewProfile.textContent = "View profile";
+        // viewProfile.addEventListener("click", () => {
+        //     window.location.href = "../php/userpage.php?id=" + user.id;
+        // });
+        // card.appendChild(viewProfile);
 
-    const image = document.createElement("img");
-    image.src = user.image;
-    card.appendChild(image);
-
-    const name = document.createElement("h2");
-    name.textContent = user.name;
-    card.appendChild(name);
-
-    const description = document.createElement("p");
-    description.textContent = user.description;
-    card.appendChild(description);
-
-    const viewProfile = document.createElement("button");
-    viewProfile.textContent = "View profile";
-    viewProfile.addEventListener("click", () => {
-        window.location.href = "userpage.php?id=" + user.id;
-    });
-    card.appendChild(viewProfile);
-
-    return card;
-}
+        return card;
+    }
+});

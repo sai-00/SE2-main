@@ -26,25 +26,38 @@
         </div>
     </nav>
 
+    <?php
+    session_start();
+
+    // Redirect to login page if user is not logged in
+    if (!isset($_SESSION['username'])) {
+        header('Location: login.php');
+        exit;
+    }
+
+    // Retrieve username from session
+    $username = $_SESSION['username'];
+    ?>
+
     <div class="profile-header">
                 <div class="profile-banner"><img src="#" alt="banner"></div>
                 <div class="profile-info">
                     <img src="#" alt="Profile" class="profile-pic">
                     <div class="profile-details">
                         <div class="profile-text">
-                            <h1>Username</h1>
+                            <h1><?php echo htmlspecialchars($username); ?></h1>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                         </div>
                         <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
                     </div>
                 </div>
             </div>
-
         <script>
             function editProfile()
             {
-                    
+                
             }
         </script>
+        
 </body>
 </html>

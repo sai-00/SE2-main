@@ -220,7 +220,6 @@
                                 echo "</div>"; 
                             }
                         }
-    
                     }
                     
                     //display user posts
