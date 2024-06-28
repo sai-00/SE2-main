@@ -38,23 +38,28 @@
     $username = $_SESSION['username'];
     ?>
 
-    <div class="profile-header">
-        <div class="profile-banner"><img src="#" alt="banner"></div>
-        <div class="profile-info">
-            <img src="../img/braver-blank-php.jpg" alt="Profile" class="profile-pic">
-            <div class="profile-details">
-            <div class="profile-text">
-                <h1 id="currentUsername"><?php echo htmlspecialchars($username); ?></h1>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-banner"></div>
+            <div class="profile-info">
+                <img src="../img/braver-blank-pfp.jpg" class="profile-pic">
+                <div class="profile-details">
+                    <div class="profile-text">
+                        <h1 id="currentUsername"><?php echo htmlspecialchars($username); ?></h1>
+                    </div>
+                </div>
             </div>
+        </div>
 
-                <form id="editProfileForm" onsubmit="return editProfile()">
-                    <label for="newUsername">New Username:</label>
-                    <input type="text" id="newUsername" name="newUsername" required><br><br>
-                    <label for="newPassword">New Password:</label>
-                    <input type="password" id="newPassword" name="newPassword" required><br><br>
-                    <button type="submit">Update Profile</button>
-                </form>
-            </div>
+        <div class="profile-edit">
+            <h2>Edit Profile Details:</h2>
+            <form id="editProfileForm" onsubmit="return editProfile()">
+                <label for="newUsername">New Username:</label>
+                <input type="text" id="newUsername" name="newUsername" placeholder="new username" required><br><br>
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="new password" required><br><br>
+                <button type="submit">Update Profile</button>
+            </form>
         </div>
     </div>
 
