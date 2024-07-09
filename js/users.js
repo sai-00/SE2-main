@@ -39,16 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
         name.textContent = user.username;
         card.appendChild(name);
 
-        const description = document.createElement("p");
-        description.textContent = user.description || "No description available.";
-        card.appendChild(description);
-
-        // const viewProfile = document.createElement("button");
-        // viewProfile.textContent = "View profile";
-        // viewProfile.addEventListener("click", () => {
-        //     window.location.href = "../php/userpage.php?id=" + user.id;
-        // });
-        // card.appendChild(viewProfile);
+        const viewProfile = document.createElement("button");
+        viewProfile.textContent = "View profile";
+        viewProfile.addEventListener("click", () => {
+            window.location.href = "../php/userpage.php?id=" + user.id;
+        });
+        card.appendChild(viewProfile);
 
         return card;
     }

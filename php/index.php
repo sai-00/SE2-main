@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,8 +97,16 @@
                 <span class="close" onclick="closeModal()">&times;</span>
                 <img id="modalImage" src="" alt="Modal Image">
                 <p id="modalText"></p>
+                <div id="commentsSection"></div>
+                <form id="commentForm" method="post" action="index.php">
+                    <input type="hidden" name="comment_post_id" id="commentPostId">
+                    <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
+                    <br>
+                    <button type="submit">Comment</button>
+                </form>
             </div>
         </div>
+
 
             <div class = "posting-form">
                 <div class="search-bar">
@@ -140,8 +152,14 @@
             </div>
 
             <div class="posts">
+                <?php
+                if (!isset($_SESSION['username'])) {
+                    header('Location: login.php');
+                    exit;
+                }
+    
+                $username = $_SESSION['username'];
 
-            <?php
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $uploadDir = 'uploads/';
                     if (!is_dir($uploadDir)) {
@@ -181,16 +199,60 @@
                     // For simplicity, saving to a file
                     $postData = [
                         'id' => uniqid(),
+                        'username' => $username,
                         'image' => $uploadFile,
                         'text' => $text,
                         'tags' => $tagArray,
-                        'likes' => 0
+                        'likes' => 0,
+                        'comments' => []
                     ];
 
                     file_put_contents('../json/posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);
-
-                    
                 }
+                
+
+                if (isset($_POST['comment_post_id']) && isset($_POST['comment_text'])) {
+                    $commentPostId = htmlspecialchars($_POST['comment_post_id']);
+                    $commentText = htmlspecialchars($_POST['comment_text']);
+            
+                    $postsFile = '../json/posts.json';
+                    if (file_exists($postsFile)) {
+                        $posts = file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                        $updatedPosts = [];
+                        foreach ($posts as $post) {
+                            $postData = json_decode($post, true);
+                            if ($postData && $postData['id'] === $commentPostId) {
+                                $comment = [
+                                    'username' => $username,
+                                    'text' => $commentText
+                                ];
+                                $postData['comments'][] = $comment;
+                            }
+                            $updatedPosts[] = json_encode($postData);
+                        }
+                        file_put_contents($postsFile, implode(PHP_EOL, $updatedPosts) . PHP_EOL);
+                    }
+                }
+
+                if (isset($_POST['like_post'])) {
+                    $postId = htmlspecialchars($_POST['post_id']);
+                
+                    // Read existing posts data
+                    $posts = file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                
+                    // Find the post to update
+                    foreach ($posts as &$post) {
+                        $postData = json_decode($post, true);
+                        if ($postData && $postData['id'] === $postId) {
+                            // Increment likes count
+                            $postData['likes']++;
+                            // Update the post in the file
+                            file_put_contents($postsFile, implode(PHP_EOL, $posts));
+                            break;
+                        }
+                    }
+                }
+            
 
                 $postsFile = '../json/posts.json';
                 $dogsFile = '../json/dogs.json';
@@ -231,11 +293,12 @@
                             echo "<div class='post-details'>";
                             echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
                             echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
+                            echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                             echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
                             echo "<form method='post' action='index.php'>";
                             echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
-                            // echo "<button onclick=\"likePost('" . htmlspecialchars($postData['id']) . "')\">Like</button>";
-                            // echo "<span id='likes_" . htmlspecialchars($postData['id']) . "'>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
+                            echo "<button type='submit' name='like_post'>Like</button>";
+                            echo "<span>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
                             echo "</form>";
                             echo "</div>"; 
                             echo "</div>"; 

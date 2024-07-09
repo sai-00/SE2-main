@@ -5,10 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to open the modal with post details
     window.openModal = function(imageSrc, text) {
-        console.log('Opening modal with image:', imageSrc, 'and text:', text);
-        modalImage.src = imageSrc;
-        modalText.textContent = text;
-        modal.style.display = "block";
+        document.getElementById('modalImage').src = imageSrc;
+        document.getElementById('modalText').innerText = text;
+        document.getElementById('commentPostId').value = postId;
+        document.getElementById('commentsSection').innerHTML = comments.map(comment => {
+            return `<p><strong>${comment.username}:</strong> ${comment.text}</p>`;
+        }).join('');
+        document.getElementById('myModal').style.display = 'block';
     }
 
     // Function to close the modal
