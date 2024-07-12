@@ -1,30 +1,63 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$user_id = $_GET['id'] ?? '';
+
+$file = '../json/users.json';
+$users = json_decode(file_get_contents($file), true);
+
+$post_file = '../json/posts.json';
+$posts = json_decode(file_get_contents($post_file), true);
+
+$user = null;
+foreach ($users as $u) {
+    if ($u['username'] === $user_id) {
+        $user = $u;
+        break;
+    }
+}
+
+// Fetch posts by the user
+$user_posts = [];
+foreach ($posts as $post) {
+    if ($post['username'] === $user_id) {
+        $user_posts[] = $post;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Pawpedia - Home</title>
     <link rel="stylesheet" href="../css/site_layout.css">
+    <link rel="stylesheet" href="../css/modal.css">
     <link rel="stylesheet" href="../css/users.css">
     <script src="../js/nav.js"></script>
     <style>
-    /* user page */
-    .breadcrumb { 
-        margin-top: 100px; 
-        margin-left: 20px;
-        font-size: 1.2em;
-    }
+        /* user page */
+        .breadcrumb { 
+            margin-top: 100px; 
+            margin-left: 20px;
+            font-size: 1.2em;
+        }
 
-    .breadcrumb a {
-        text-decoration: none;
-        color: #333;
-    }   
+        .breadcrumb a {
+            text-decoration: none;
+            color: #333;
+        }   
 
-    .breadcrumb a:hover {
-        text-decoration: underline;
-        color: #6660c1; 
-        transition: 0.3s;
-    }      
+        .breadcrumb a:hover {
+            text-decoration: underline;
+            color: #6660c1; 
+            transition: 0.3s;
+        }      
 
-    .main-content {
+        .main-content {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -71,12 +104,58 @@
             transition: 0.3s;
         }
 
-        .logo a
-        {
+        .logo a {
             text-decoration: none;
             color: white;
         }
 
+        /* post cards */
+        .post-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px;
+            max-width: 300px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .post-card img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .post-card .post-content {
+            padding: 10px;
+        }
+
+        .post-card h3 {
+            margin: 0;
+        }
+
+        .post-card p {
+            margin: 5px 0;
+        }
+
+        .post-card button {
+            background-color: #6660c1;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .post-card button:hover {
+            background-color: #333;
+            transition: 0.3s;
+        }
+
+        .posts-container {
+            margin: 20px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -99,32 +178,33 @@
 
     <section class="main-content">
         <div id="user-profile" class="user-profile">
+            <?php if ($user): ?>
+                <h2><?php echo htmlspecialchars($user['username']); ?></h2>
+            <?php else: ?>
+                <p>User not found.</p>
+            <?php endif; ?>
         </div>
     </section>
-    
-    <script type="module">
-        // Fetch the user ID from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('id');
 
-        // Fetch the user list from local storage
-        const userArray = localStorage.getItem("userList");
-        const users = JSON.parse(userArray);
-
-        // Find the user by ID
-        const user = users.find(u => u.id == userId);
-
-        const userProfile = document.getElementById("user-profile");
-
-        if (user) {
-            userProfile.innerHTML = `
-                <img src="${user.image}" alt="User Image">
-                <h2>${user.name}</h2>
-                <p>${user.description}</p>
-            `;
-        } else {
-            userProfile.innerHTML = "<p>User not found.</p>";
-        }
-    </script>
+    <section class="posts-container">
+        <h2>Posts</h2>
+        <?php if (count($user_posts) > 0): ?>
+            <?php foreach ($user_posts as $post): ?>
+                <div class="post-card">
+                    <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
+                    <div class="post-content">
+                        <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+                        <p>Post ID: <?php echo htmlspecialchars($post['id']); ?></p>
+                        <p>Posted by: <?php echo htmlspecialchars($post['username']); ?></p>
+                        <p>Tags: <?php echo htmlspecialchars($post['tags']); ?></p>
+                        <button>Like</button>
+                        <p>Likes: <?php echo htmlspecialchars($post['likes']); ?></p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No posts available.</p>
+        <?php endif; ?>
+    </section>
 </body>
 </html>

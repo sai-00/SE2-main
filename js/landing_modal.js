@@ -5,16 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalUsername = document.getElementById('modalUsername');
     const modalTags = document.getElementById('modalTags');
     const commentsSection = document.getElementById('commentsSection');
-    const commentPostId = document.getElementById('commentPostId');
 
-    window.openModal = function(imageSrc, text, postId, comments, username, tags) {
-        console.log('Opening modal with image:', imageSrc, 'text:', text, 'username:', username, 'tags:', tags);
+    window.openModal = function(imageSrc, text, id, comments, username, tags) {
+        console.log('Opening modal with image:', imageSrc, 'text:', text, 'id:', id, 'username:', username, 'tags:', tags);
 
         modalImage.src = imageSrc;
         modalText.textContent = text;
         modalUsername.textContent = "Posted by: " + username;
         modalTags.textContent = "Tags: " + tags;
-        commentPostId.value = postId;
 
         commentsSection.innerHTML = ''; // Clear existing comments
         const commentsArray = JSON.parse(comments);

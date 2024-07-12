@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const viewProfile = document.createElement("button");
         viewProfile.textContent = "View profile";
         viewProfile.addEventListener("click", () => {
-            window.location.href = "../php/userpage.php?id=" + user.id;
+            window.location.href = "../php/userpage.php?id=" + encodeURIComponent(user.username);
         });
         card.appendChild(viewProfile);
 

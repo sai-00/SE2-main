@@ -6,74 +6,10 @@ session_start();
 <html lang="en">
 <head>
     <title>Pawpedia - Home</title>
-    
     <script src="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.78/Build/Cesium/Cesium.js"></script>
     <link rel="stylesheet" href="../css/site_layout.css">
+    <link rel="stylesheet" href="../css/modal.css">
     <script src="../js/modal.js"></script>
-
-    <style>
-        /* CSS for modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.9);
-        }
-
-        .modal img 
-        {
-            width: 60%;
-            height: auto;
-        }
-
-        .modal-content {
-            margin: 10% auto;
-            padding: 20px;
-            width: 100%;
-            max-width:50%;
-            background-color: #fefefe;
-            position: relative;
-            background-color: #dba181;
-            border-radius: 20px;
-        }
-
-        .close {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 25px;
-            font-size: 30px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .post {
-            margin: 20px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 300px;
-            cursor: pointer;
-        }
-
-        .post img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .logo a
-        {
-            text-decoration: none;
-            color: white;
-        }
-    </style>
-
 </head>
 <body>
     <nav class="top-navbar">
@@ -91,12 +27,13 @@ session_start();
 
     <section class="main-content">
 
-        <!-- Modal -->
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <img id="modalImage" src="" alt="Modal Image">
                 <p id="modalText"></p>
+                <p id="modalUsername"></p>
+                <p id="modalTags"></p>
                 <div id="commentsSection"></div>
                 <form id="commentForm" method="post" action="index.php">
                     <input type="hidden" name="comment_post_id" id="commentPostId">
@@ -104,19 +41,39 @@ session_start();
                     <br>
                     <button type="submit">Comment</button>
                 </form>
+                <br><hr>
+                <p><h3>Comments</h3></p>
             </div>
         </div>
 
 
             <div class = "posting-form">
                 <div class="search-bar">
-                    <label for="search">Search a breed:</label>
-                    <input type="text" id="search" name="search" placeholder="Search for breed">
-                    <br>
-                    <button onclick="searchPosts()">Search</button>
-                    <button onclick="clearSearch()">Clear Search</button>
+                <label for="search">Search a breed:</label>
+                <select id="search" name="search">
+                <option value="">Select a breed</option>
+                    <option value="Shih Tzu">Shih Tzu</option>
+                    <option value="Shiba Inu">Shiba Inu</option>
+                    <option value="Pug">Pug</option>
+                    <option value="Corgi">Corgi</option>
+                    <option value="Beagle">Beagle</option>
+                    <option value="Yorkshire">Yorkshire</option>
+                    <option value="Pomeranian">Pomeranian</option>
+                    <option value="Poodle">Poodle</option>
+                    <option value="Bulldog">Bulldog</option>
+                    <option value="Golden Retriever">Golden Retriever</option>
+                    <option value="Labrador">Labrador</option>
+                    <option value="Borzoi">Borzoi</option>
+                    <option value="Dalmatian">Dalmatian</option>
+                    <option value="Chihuahua">Chihuahua</option>
+                    <option value="Husky">Husky</option>
+                </select>
+                <br>
+                <button onclick="searchPosts()">Search</button>
+                <button onclick="clearSearch()">Clear Search</button>
                 </div>
                 <br><br>
+                <h2><u>Make a post!</u></h2>
                 <form action="index.php" method="post" enctype="multipart/form-data">
                     <textarea name="text" id="text" rows="4" cols="50" placeholder="Enter your text" required></textarea>
                     <br>
@@ -133,8 +90,8 @@ session_start();
                         <option value="Beagle">Beagle</option>
                         <option value="Yorkshire">Yorkshire</option>
                         <option value="Pomeranian">Pomeranian</option>
-                        <option value="Poodle">Toy Poodle</option>
-                        <option value="Bulldog">French Bulldog</option>
+                        <option value="Poodle">Poodle</option>
+                        <option value="Bulldog">Bulldog</option>
                         <option value="Golden Retriever">Golden Retriever</option>
                         <option value="Labrador">Labrador</option>
                         <option value="Borzoi">Borzoi</option>
@@ -195,15 +152,12 @@ session_start();
                     $tagArray = array_map('trim', explode(',', $tags));
                     $tagArray = array_map('strtolower', $tagArray); // Convert tags to lowercase
 
-                    // Save the post data (e.g., to a database or file)
-                    // For simplicity, saving to a file
                     $postData = [
                         'id' => uniqid(),
                         'username' => $username,
                         'image' => $uploadFile,
                         'text' => $text,
                         'tags' => $tagArray,
-                        'likes' => 0,
                         'comments' => []
                     ];
 
@@ -233,26 +187,6 @@ session_start();
                         file_put_contents($postsFile, implode(PHP_EOL, $updatedPosts) . PHP_EOL);
                     }
                 }
-
-                if (isset($_POST['like_post'])) {
-                    $postId = htmlspecialchars($_POST['post_id']);
-                
-                    // Read existing posts data
-                    $posts = file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                
-                    // Find the post to update
-                    foreach ($posts as &$post) {
-                        $postData = json_decode($post, true);
-                        if ($postData && $postData['id'] === $postId) {
-                            // Increment likes count
-                            $postData['likes']++;
-                            // Update the post in the file
-                            file_put_contents($postsFile, implode(PHP_EOL, $posts));
-                            break;
-                        }
-                    }
-                }
-            
 
                 $postsFile = '../json/posts.json';
                 $dogsFile = '../json/dogs.json';
@@ -288,17 +222,16 @@ session_start();
                     foreach ($posts as $post) {
                         $postData = json_decode($post, true);
                         if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
-                            echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "')\">";
+                            echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
                             echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
                             echo "<div class='post-details'>";
                             echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
                             echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                             echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                             echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
-                            echo "<form method='post' action='index.php'>";
+                            echo "<form method='post' action='index.php' onsubmit=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "'); return false;\">";
                             echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
-                            echo "<button type='submit' name='like_post'>Like</button>";
-                            echo "<span>Likes: " . htmlspecialchars($postData['likes']) . "</span>";
+                            echo "<button type='submit'>Comment</button>";
                             echo "</form>";
                             echo "</div>"; 
                             echo "</div>"; 
@@ -339,7 +272,7 @@ session_start();
 
     window.searchPosts = function() {
              const searchInput = document.getElementById('search').value.trim();
-             console.log('Search input:', searchInput); // Log search input
+             console.log('Search input:', searchInput);
              if (searchInput) {
                  window.location.href = `index.php?search=${encodeURIComponent(searchInput)}`;
              } else {

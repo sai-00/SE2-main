@@ -35,9 +35,10 @@
         exit;
     }
 
+    $username = $_SESSION['username'];
     // Path to the users.json file
     $file = '../json/users.json';
     $users = json_decode(file_get_contents($file), true);
     ?>
 </body>
-</html>
+</html>`    
