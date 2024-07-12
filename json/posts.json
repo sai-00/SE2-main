@@ -16,5 +16,5 @@
 {"id":"667dd6c931d59","username":"paulo","image":"uploads\/shih tzu.jpg","text":"BALLS","tags":["shih tzu"],"comments":[]}
 {"id":"667e238e117ac","username":"hal","image":"uploads\/images.jpg","text":"borzoi","tags":["borzoi"],"comments":[]}
 {"id":"668d98761d631","username":"testuser","image":"uploads\/c9c8af92-4e1a-4b74-b934-77dc853c9d71.jpg","text":"let me do it fow u","tags":["borzoi"],"comments":[]}
-{"id":"66901e8cb4913","username":"abracadabra","image":"uploads\/flat,750x,075,f-pad,750x1000,f8f8f8.jpg","text":":3","tags":["shiba inu"],"comments":[]}
-{"id":"66901ed9a2d30","username":"abracadabra","image":"uploads\/licensed-image.jpg","text":"huf","tags":["bulldog"],"comments":[]}
+{"id":"66901e8cb4913","username":"abracadabra","image":"uploads\/flat,750x,075,f-pad,750x1000,f8f8f8.jpg","text":":3","tags":["shiba inu"],"comments":[{"username":"hal","text":"hello there"},{"username":"hal","text":"test"}]}
+{"id":"66901ed9a2d30","username":"abracadabra","image":"uploads\/licensed-image.jpg","text":"huf","tags":["bulldog"],"comments":[{"username":"hal","text":"hello world"},{"username":"hal","text":"hi 123"}]}

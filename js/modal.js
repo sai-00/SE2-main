@@ -37,3 +37,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 });
+
+function displayComments(comments) {
+    const commentsSection = document.getElementById('commentsSection');
+    commentsSection.innerHTML = ''; // Clear previous comments
+    const parsedComments = JSON.parse(comments);
+    parsedComments.forEach(comment => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comment';
+        const commentText = document.createElement('p');
+        commentText.innerText = comment.text;
+        const commentUser = document.createElement('p');
+        commentUser.innerText = 'Comment by: ' + comment.username;
+        commentDiv.appendChild(commentText);
+        commentDiv.appendChild(commentUser);
+        commentsSection.appendChild(commentDiv);
+    });
+}

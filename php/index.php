@@ -6,7 +6,6 @@ session_start();
 <html lang="en">
 <head>
     <title>Pawpedia - Home</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.78/Build/Cesium/Cesium.js"></script>
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/modal.css">
     <script src="../js/modal.js"></script>
@@ -14,7 +13,7 @@ session_start();
 <body>
     <nav class="top-navbar">
         <div class="logo">
-        <a href="index.php"><strong>Pawpedia</strong></a>
+            <a href="index.php"><strong>Pawpedia</strong></a>
         </div>
         
         <div class="nav-links">
@@ -34,7 +33,6 @@ session_start();
                 <p id="modalText"></p>
                 <p id="modalUsername"></p>
                 <p id="modalTags"></p>
-                <div id="commentsSection"></div>
                 <form id="commentForm" method="post" action="index.php">
                     <input type="hidden" name="comment_post_id" id="commentPostId">
                     <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
@@ -42,16 +40,16 @@ session_start();
                     <button type="submit">Comment</button>
                 </form>
                 <br><hr>
-                <p><h3>Comments</h3></p>
+                <h3>Comments</h3>
+                <div id="commentsSection"></div>
             </div>
         </div>
 
-
-            <div class = "posting-form">
-                <div class="search-bar">
+        <div class="posting-form">
+            <div class="search-bar">
                 <label for="search">Search a breed:</label>
                 <select id="search" name="search">
-                <option value="">Select a breed</option>
+                    <option value="">Select a breed</option>
                     <option value="Shih Tzu">Shih Tzu</option>
                     <option value="Shiba Inu">Shiba Inu</option>
                     <option value="Pug">Pug</option>
@@ -71,53 +69,52 @@ session_start();
                 <br>
                 <button onclick="searchPosts()">Search</button>
                 <button onclick="clearSearch()">Clear Search</button>
-                </div>
-                <br><br>
-                <h2><u>Make a post!</u></h2>
-                <form action="index.php" method="post" enctype="multipart/form-data">
-                    <textarea name="text" id="text" rows="4" cols="50" placeholder="Enter your text" required></textarea>
-                    <br>
-                    <label for="image">Choose an image:</label>
-                    <input type="file" name="image" id="image" required>
-                    <br><br><br>
-                    <label for="tags">Select breed:</label>
-                    <select id="tags" name="tags" required>
-                        <option value="">Select a breed</option>
-                        <option value="Shih Tzu">Shih Tzu</option>
-                        <option value="Shiba Inu">Shiba Inu</option>
-                        <option value="Pug">Pug</option>
-                        <option value="Corgi">Corgi</option>
-                        <option value="Beagle">Beagle</option>
-                        <option value="Yorkshire">Yorkshire</option>
-                        <option value="Pomeranian">Pomeranian</option>
-                        <option value="Poodle">Poodle</option>
-                        <option value="Bulldog">Bulldog</option>
-                        <option value="Golden Retriever">Golden Retriever</option>
-                        <option value="Labrador">Labrador</option>
-                        <option value="Borzoi">Borzoi</option>
-                        <option value="Dalmatian">Dalmatian</option>
-                        <option value="Chihuahua">Chihuahua</option>
-                        <option value="Husky">Husky</option>
-                    </select>
-                    <br><br>
-                    <button type="submit">Post</button>
-                </form>
-                <br><br>
-                <div id="wiki-entry" class="wiki-entry">
-
-                </div>
             </div>
+            <br><br>
+            <h2><u>Make a post!</u></h2>
+            <form action="index.php" method="post" enctype="multipart/form-data">
+                <textarea name="text" id="text" rows="4" cols="50" placeholder="Enter your text" required></textarea>
+                <br>
+                <label for="image">Choose an image:</label>
+                <input type="file" name="image" id="image" required>
+                <br><br><br>
+                <label for="tags">Select breed:</label>
+                <select id="tags" name="tags" required>
+                    <option value="">Select a breed</option>
+                    <option value="Shih Tzu">Shih Tzu</option>
+                    <option value="Shiba Inu">Shiba Inu</option>
+                    <option value="Pug">Pug</option>
+                    <option value="Corgi">Corgi</option>
+                    <option value="Beagle">Beagle</option>
+                    <option value="Yorkshire">Yorkshire</option>
+                    <option value="Pomeranian">Pomeranian</option>
+                    <option value="Poodle">Poodle</option>
+                    <option value="Bulldog">Bulldog</option>
+                    <option value="Golden Retriever">Golden Retriever</option>
+                    <option value="Labrador">Labrador</option>
+                    <option value="Borzoi">Borzoi</option>
+                    <option value="Dalmatian">Dalmatian</option>
+                    <option value="Chihuahua">Chihuahua</option>
+                    <option value="Husky">Husky</option>
+                </select>
+                <br><br>
+                <button type="submit">Post</button>
+            </form>
+            <br><br>
+            <div id="wiki-entry" class="wiki-entry"></div>
+        </div>
 
-            <div class="posts">
-                <?php
-                if (!isset($_SESSION['username'])) {
-                    header('Location: login.php');
-                    exit;
-                }
-    
-                $username = $_SESSION['username'];
+        <div class="posts">
+            <?php
+            if (!isset($_SESSION['username'])) {
+                header('Location: login.php');
+                exit;
+            }
 
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_SESSION['username'];
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (isset($_POST['text']) && isset($_FILES['image'])) {
                     $uploadDir = 'uploads/';
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
@@ -162,10 +159,7 @@ session_start();
                     ];
 
                     file_put_contents('../json/posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);
-                }
-                
-
-                if (isset($_POST['comment_post_id']) && isset($_POST['comment_text'])) {
+                } elseif (isset($_POST['comment_post_id']) && isset($_POST['comment_text'])) {
                     $commentPostId = htmlspecialchars($_POST['comment_post_id']);
                     $commentText = htmlspecialchars($_POST['comment_text']);
             
@@ -187,72 +181,69 @@ session_start();
                         file_put_contents($postsFile, implode(PHP_EOL, $updatedPosts) . PHP_EOL);
                     }
                 }
+            }
 
-                $postsFile = '../json/posts.json';
-                $dogsFile = '../json/dogs.json';
+            $postsFile = '../json/posts.json';
+            $dogsFile = '../json/dogs.json';
 
-                if (file_exists($postsFile) || file_exists($dogsFile)) {
-                    $posts = file_exists($postsFile) ? array_reverse(file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) : [];
-                    $dogs = file_exists($dogsFile) ? file($dogsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
-                    
-                    $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
+            if (file_exists($postsFile) || file_exists($dogsFile)) {
+                $posts = file_exists($postsFile) ? array_reverse(file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) : [];
+                $dogs = file_exists($dogsFile) ? file($dogsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
+                
+                $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
 
-                    echo "<div class='tiles'>";
-                    
-                    //display wiki entry
-                    if (!empty($searchTag)) {
-                        foreach ($dogs as $dog) {
-                            $dogData = json_decode($dog, true);
-                            if ($dogData && is_array($dogData) && strtolower($dogData['breed']) === strtolower($searchTag)) {
-                                echo "<div class='post-tile'" . htmlspecialchars($dogData['image']) . "', '')\" style='background-color: #dba181;'>";
-                                echo "<img src='" . htmlspecialchars($dogData['image']) . "' alt='Dog Image'>";
-                                echo "<div class='post-details'>";
-                                echo "<p><strong><u>Wiki Entry!</u></strong></p>";
-                                echo "<p><strong>Breed:</strong> " . htmlspecialchars($dogData['breed']) . "</p>";
-                                echo "<br><br>";
-                                echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dogData['breed']) . " information.</p>";
-                                echo "<button onclick=\"window.location.href='dog_details.php?search=" . urlencode($dogData['breed']) . "'\">Read More</button>";
-                                echo "</div>"; 
-                                echo "</div>"; 
-                            }
-                        }
-                    }
-                    
-                    //display user posts
-                    foreach ($posts as $post) {
-                        $postData = json_decode($post, true);
-                        if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
-                            echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
-                            echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
+                echo "<div class='tiles'>";
+                
+                //display wiki entry
+                if (!empty($searchTag)) {
+                    foreach ($dogs as $dog) {
+                        $dogData = json_decode($dog, true);
+                        if ($dogData && is_array($dogData) && strtolower($dogData['breed']) === strtolower($searchTag)) {
+                            echo "<div class='post-tile'" . htmlspecialchars($dogData['image']) . "', '')\" style='background-color: #dba181;'>";
+                            echo "<img src='" . htmlspecialchars($dogData['image']) . "' alt='Dog Image'>";
                             echo "<div class='post-details'>";
-                            echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
-                            echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
-                            echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
-                            echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
-                            echo "<form method='post' action='index.php' onsubmit=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "'); return false;\">";
-                            echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
-                            echo "<button type='submit'>Comment</button>";
-                            echo "</form>";
+                            echo "<p><strong><u>Wiki Entry!</u></strong></p>";
+                            echo "<p><strong>Breed:</strong> " . htmlspecialchars($dogData['breed']) . "</p>";
+                            echo "<br><br>";
+                            echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dogData['breed']) . " information.</p>";
+                            echo "<button onclick=\"window.location.href='dog_details.php?search=" . urlencode($dogData['breed']) . "'\">Read More</button>";
                             echo "</div>"; 
                             echo "</div>"; 
                         }
                     }
-
-                    echo "</div>"; 
-                } else {
-                    echo "<p>No posts or dog entries available.</p>";
                 }
-                ?>
-            </div>
-        </section>
-        
-    <script type="module">
-    function logout() {
-    
-    window.location.href="login.php"
-    sessionStorage.clear()
-    }
+                
+                //display user posts
+                foreach ($posts as $post) {
+                    $postData = json_decode($post, true);
+                    if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
+                        echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
+                        echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
+                        echo "<div class='post-details'>";
+                        echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
+                        echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
+                        echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
+                        echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
+                        echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
+                        echo "<button onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "'); return false;\">Comment</button>";
+                        echo "</div>"; 
+                        echo "</div>"; 
+                    }
+                }
 
+                echo "</div>"; 
+            } else {
+                echo "<p>No posts or dog entries available.</p>";
+            }
+            ?>
+        </div>
+    </section>
+        
+    <script>
+    function logout() {
+        window.location.href = "login.php";
+        sessionStorage.clear();
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         var logoutLink = document.getElementById('logout');
@@ -266,20 +257,59 @@ session_start();
         }
     });
 
-     window.clearSearch = function() {
-         window.location.href = 'index.php';
-     };
+    function clearSearch() {
+        window.location.href = 'index.php';
+    }
 
-    window.searchPosts = function() {
-             const searchInput = document.getElementById('search').value.trim();
-             console.log('Search input:', searchInput);
-             if (searchInput) {
-                 window.location.href = `index.php?search=${encodeURIComponent(searchInput)}`;
-             } else {
-                 alert('Please enter a tag to search for.');
-             }
-         };
-        
-</script>
+    function searchPosts() {
+        const searchInput = document.getElementById('search').value.trim();
+        if (searchInput) {
+            window.location.href = `index.php?search=${encodeURIComponent(searchInput)}`;
+        } else {
+            alert('Please enter a tag to search for.');
+        }
+    }
+
+    function displayComments(comments) {
+        const commentsSection = document.getElementById('commentsSection');
+        commentsSection.innerHTML = ''; // Clear previous comments
+        const parsedComments = JSON.parse(comments);
+        parsedComments.forEach(comment => {
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment';
+            const commentText = document.createElement('p');
+            commentText.innerText = comment.text;
+            const commentUser = document.createElement('p');
+            commentUser.innerText = 'Comment by: ' + comment.username;
+            commentDiv.appendChild(commentText);
+            commentDiv.appendChild(commentUser);
+            commentsSection.appendChild(commentDiv);
+        });
+    }
+
+    document.getElementById('commentsSection').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const commentText = document.getElementById('commentText').value.trim();
+        const commentPostId = document.getElementById('commentPostId').value;
+        if (commentText) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'index.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const newComment = {
+                        username: '<?php echo $username; ?>',
+                        text: commentText
+                    };
+                    const commentsArray = JSON.parse(xhr.responseText);
+                    commentsArray.push(newComment);
+                    displayComments(JSON.stringify(commentsArray));
+                    document.getElementById('commentText').value = ''; 
+                }
+            };
+            xhr.send('comment_post_id=' + encodeURIComponent(commentPostId) + '&comment_text=' + encodeURIComponent(commentText));
+        }
+    });
+    </script>
 </body>
 </html>
