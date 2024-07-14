@@ -45,16 +45,22 @@
         if (empty($newUsername) || empty($password)) {
             $response = ['success' => false, 'message' => 'All fields are required.'];
         } else {
-            // Path to the JSON file
-            $jsonFilePath = '../json/users.json';
+            // Paths to the JSON files
+            $userJsonFilePath = '../json/users.json';
+            $postJsonFilePath = '../json/posts.json';
 
-            // Check if JSON file exists
-            if (!file_exists($jsonFilePath)) {
+            // Check if JSON files exist
+            if (!file_exists($userJsonFilePath)) {
                 $response = ['success' => false, 'message' => 'User data not found.'];
+            } elseif (!file_exists($postJsonFilePath)) {
+                $response = ['success' => false, 'message' => 'Posts data not found.'];
             } else {
-                // Read and decode JSON file
-                $jsonData = file_get_contents($jsonFilePath);
-                $users = json_decode($jsonData, true);
+                // Read and decode JSON files
+                $userJsonData = file_get_contents($userJsonFilePath);
+                $users = json_decode($userJsonData, true);
+                
+                $postJsonData = file_get_contents($postJsonFilePath);
+                $posts = json_decode($postJsonData, true);
 
                 // Find the current user
                 $currentUser = null;
@@ -74,11 +80,19 @@
                     if (!password_verify($password, $currentUser['password'])) {
                         $response = ['success' => false, 'message' => 'Incorrect password.'];
                     } else {
-                        // Update username
+                        // Update username in users
                         $users[$currentUserIndex]['username'] = $newUsername;
 
-                        // Save updated users data to JSON file
-                        file_put_contents($jsonFilePath, json_encode($users));
+                        // Update username in posts
+                        foreach ($posts as &$post) {
+                            if ($post['username'] === $username) {
+                                $post['username'] = $newUsername;
+                            }
+                        }
+
+                        // Save updated users and posts data to JSON files
+                        file_put_contents($userJsonFilePath, json_encode($users));
+                        file_put_contents($postJsonFilePath, json_encode($posts));
 
                         // Update session username
                         $_SESSION['username'] = $newUsername;

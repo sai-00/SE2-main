@@ -1,5 +1,111 @@
 <?php
 session_start();
+
+// Define file paths
+$postsFile = '../json/posts.json';
+$dogsFile = '../json/dogs.json';
+
+// Initialize posts and dogs data arrays
+$postsData = [];
+$dogsData = [];
+
+// Load posts data if the file exists
+if (file_exists($postsFile)) {
+    $postsJson = file_get_contents($postsFile);
+    $decodedPosts = json_decode($postsJson, true);
+    if (is_array($decodedPosts)) {
+        $postsData = $decodedPosts;
+    }
+}
+
+// Load dogs data if the file exists
+if (file_exists($dogsFile)) {
+    $dogsJson = file_get_contents($dogsFile);
+    $decodedDogs = json_decode($dogsJson, true);
+    if (is_array($decodedDogs)) {
+        $dogsData = $decodedDogs;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['text']) && isset($_FILES['image'])) {
+        // Handle new post creation
+        $uploadDir = 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $uploadFile = $uploadDir . basename($_FILES['image']['name']);
+        $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
+
+        // Validate uploaded image
+        $check = getimagesize($_FILES['image']['tmp_name']);
+        if ($check === false) {
+            die("File is not an image.");
+        }
+
+        // Check file size (limit to 5MB)
+        if ($_FILES['image']['size'] > 5000000) {
+            die("Sorry, your file is too large.");
+        }
+
+        // Allow certain file formats
+        if ($imageFileType !== 'jpg' && $imageFileType !== 'png' && $imageFileType !== 'jpeg' && $imageFileType !== 'gif') {
+            die("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+        }
+
+        // Move uploaded file to destination
+        if (!move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+            die("Sorry, there was an error uploading your file.");
+        }
+
+        // Create new post data
+        $text = htmlspecialchars($_POST['text']);
+        $tags = htmlspecialchars($_POST['tags']);
+        $tagArray = array_map('trim', explode(',', $tags));
+        $tagArray = array_map('strtolower', $tagArray);
+
+        $postData = [
+            'id' => uniqid(),
+            'username' => $_SESSION['username'],
+            'image' => $uploadFile,
+            'text' => $text,
+            'tags' => $tagArray,
+            'comments' => []
+        ];
+
+        // Append new post data
+        $postsData[] = $postData;
+
+        // Save updated posts data back to JSON file
+        file_put_contents($postsFile, json_encode($postsData, JSON_PRETTY_PRINT));
+    } elseif (isset($_POST['comment_post_id']) && isset($_POST['comment_text'])) {
+        // Handle adding a comment
+        $commentPostId = htmlspecialchars($_POST['comment_post_id']);
+        $commentText = htmlspecialchars($_POST['comment_text']);
+
+        // Read existing posts
+        if (file_exists($postsFile)) {
+            $postsJson = file_get_contents($postsFile);
+            $postsData = json_decode($postsJson, true);
+        }
+
+        // Find the post and add comment
+        foreach ($postsData as &$post) {
+            if ($post['id'] === $commentPostId) {
+                $comment = [
+                    'username' => $_SESSION['username'],
+                    'text' => $commentText
+                ];
+                $post['comments'][] = $comment;
+                break;
+            }
+        }
+
+        // Save updated posts data back to JSON file
+        file_put_contents($postsFile, json_encode($postsData, JSON_PRETTY_PRINT));
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -110,112 +216,37 @@ session_start();
                 header('Location: login.php');
                 exit;
             }
-
+            
             $username = $_SESSION['username'];
 
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                if (isset($_POST['text']) && isset($_FILES['image'])) {
-                    $uploadDir = 'uploads/';
-                    if (!is_dir($uploadDir)) {
-                        mkdir($uploadDir, 0777, true);
-                    }
-                    $uploadFile = $uploadDir . basename($_FILES['image']['name']);
-                    $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
-
-                    // Check if image file is an actual image or fake image
-                    $check = getimagesize($_FILES['image']['tmp_name']);
-                    if ($check === false) {
-                        die("File is not an image.");
-                    }
-
-                    // Check file size (limit to 5MB)
-                    if ($_FILES['image']['size'] > 5000000) {
-                        die("Sorry, your file is too large.");
-                    }
-
-                    // Allow certain file formats
-                    if ($imageFileType !== 'jpg' && $imageFileType !== 'png' && $imageFileType !== 'jpeg' && $imageFileType !== 'gif') {
-                        die("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
-                    }
-
-                    // Check if $uploadFile is set to write
-                    if (!move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-                        die("Sorry, there was an error uploading your file.");
-                    }
-
-                    // Save the text and tags
-                    $text = htmlspecialchars($_POST['text']);
-                    $tags = htmlspecialchars($_POST['tags']);
-                    $tagArray = array_map('trim', explode(',', $tags));
-                    $tagArray = array_map('strtolower', $tagArray); // Convert tags to lowercase
-
-                    $postData = [
-                        'id' => uniqid(),
-                        'username' => $username,
-                        'image' => $uploadFile,
-                        'text' => $text,
-                        'tags' => $tagArray,
-                        'comments' => []
-                    ];
-
-                    file_put_contents('../json/posts.json', json_encode($postData) . PHP_EOL, FILE_APPEND);
-                } elseif (isset($_POST['comment_post_id']) && isset($_POST['comment_text'])) {
-                    $commentPostId = htmlspecialchars($_POST['comment_post_id']);
-                    $commentText = htmlspecialchars($_POST['comment_text']);
-            
-                    $postsFile = '../json/posts.json';
-                    if (file_exists($postsFile)) {
-                        $posts = file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                        $updatedPosts = [];
-                        foreach ($posts as $post) {
-                            $postData = json_decode($post, true);
-                            if ($postData && $postData['id'] === $commentPostId) {
-                                $comment = [
-                                    'username' => $username,
-                                    'text' => $commentText
-                                ];
-                                $postData['comments'][] = $comment;
-                            }
-                            $updatedPosts[] = json_encode($postData);
-                        }
-                        file_put_contents($postsFile, implode(PHP_EOL, $updatedPosts) . PHP_EOL);
-                    }
-                }
-            }
-
-            $postsFile = '../json/posts.json';
-            $dogsFile = '../json/dogs.json';
-
             if (file_exists($postsFile) || file_exists($dogsFile)) {
-                $posts = file_exists($postsFile) ? array_reverse(file($postsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) : [];
-                $dogs = file_exists($dogsFile) ? file($dogsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) : [];
+                $posts = file_exists($postsFile) ? array_reverse(json_decode(file_get_contents($postsFile), true)) : [];
+                $dogs = file_exists($dogsFile) ? json_decode(file_get_contents($dogsFile), true) : [];
                 
                 $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
 
                 echo "<div class='tiles'>";
                 
-                //display wiki entry
+                // Display wiki entry
                 if (!empty($searchTag)) {
                     foreach ($dogs as $dog) {
-                        $dogData = json_decode($dog, true);
-                        if ($dogData && is_array($dogData) && strtolower($dogData['breed']) === strtolower($searchTag)) {
-                            echo "<div class='post-tile'" . htmlspecialchars($dogData['image']) . "', '')\" style='background-color: #dba181;'>";
-                            echo "<img src='" . htmlspecialchars($dogData['image']) . "' alt='Dog Image'>";
+                        if (strtolower($dog['breed']) === $searchTag) {
+                            echo "<div class='post-tile' style='background-color: #dba181;'>";
+                            echo "<img src='" . htmlspecialchars($dog['image']) . "' alt='Dog Image'>";
                             echo "<div class='post-details'>";
                             echo "<p><strong><u>Wiki Entry!</u></strong></p>";
-                            echo "<p><strong>Breed:</strong> " . htmlspecialchars($dogData['breed']) . "</p>";
+                            echo "<p><strong>Breed:</strong> " . htmlspecialchars($dog['breed']) . "</p>";
                             echo "<br><br>";
-                            echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dogData['breed']) . " information.</p>";
-                            echo "<button onclick=\"window.location.href='dog_details.php?search=" . urlencode($dogData['breed']) . "'\">Read More</button>";
+                            echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dog['breed']) . " information.</p>";
+                            echo "<button onclick=\"window.location.href='dog_details.php?search=" . urlencode($dog['breed']) . "'\">Read More</button>";
                             echo "</div>"; 
                             echo "</div>"; 
                         }
                     }
                 }
                 
-                //display user posts
-                foreach ($posts as $post) {
-                    $postData = json_decode($post, true);
+                // Display user posts
+                foreach ($posts as $postData) {
                     if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
                         echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
                         echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
@@ -224,8 +255,6 @@ session_start();
                         echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                         echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                         echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
-                        echo "<input type='hidden' name='post_id' value='" . htmlspecialchars($postData['id']) . "'>";
-                        echo "<button onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "'); return false;\">Comment</button>";
                         echo "</div>"; 
                         echo "</div>"; 
                     }
@@ -287,7 +316,7 @@ session_start();
         });
     }
 
-    document.getElementById('commentsSection').addEventListener('submit', function(event) {
+    document.getElementById('commentForm').addEventListener('submit', function(event) {
         event.preventDefault();
         const commentText = document.getElementById('commentText').value.trim();
         const commentPostId = document.getElementById('commentPostId').value;
@@ -310,6 +339,20 @@ session_start();
             xhr.send('comment_post_id=' + encodeURIComponent(commentPostId) + '&comment_text=' + encodeURIComponent(commentText));
         }
     });
+
+    function openModal(image, text, id, comments, username, tags) {
+        document.getElementById('modalImage').src = image;
+        document.getElementById('modalText').textContent = text;
+        document.getElementById('modalUsername').textContent = 'Posted by: ' + username;
+        document.getElementById('modalTags').textContent = 'Tags: ' + JSON.parse(tags).join(', ');
+        document.getElementById('commentPostId').value = id;
+        displayComments(comments);
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
     </script>
 </body>
 </html>

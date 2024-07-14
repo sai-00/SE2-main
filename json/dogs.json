@@ -1,15 +1,17 @@
-{"breed":"Bulldog","image":"../img/wikiDogs/bulldog.jpg"}
-{"breed":"Poodle","image":"../img/wikiDogs/poodle.jpg"}
-{"breed":"Shih Tzu","image":"../img/wikiDogs/shihtzu.jpg"}
-{"breed":"Borzoi","image":"../img/wikiDogs/borzoi.jpg"}
-{"breed":"Shiba Inu","image":"../img/wikiDogs/shibainu.jpg"}
-{"breed":"Golden Retriever","image":"../img/wikiDogs/goldenretriever.jpg"}
-{"breed":"Pug","image":"../img/wikiDogs/pug.jpg"}
-{"breed":"Husky","image":"../img/wikiDogs/husky.jpeg"}
-{"breed":"Corgi","image":"../img/wikiDogs/corgi.jpg"}
-{"breed":"Chihuahua","image":"../img/wikiDogs/chihuahua.jpg"}
-{"breed":"Dalmatian","image":"../img/wikiDogs/dalmatian.jpg"}
-{"breed":"Beagle","image":"../img/wikiDogs/beagle.jpg"}
-{"breed":"Yorkshire","image":"../img/wikiDogs/yorkshire.jpg"}
-{"breed":"Pomeranian","image":"../img/wikiDogs/pomeranian.jpeg"}
-{"breed":"Labrador","image":"../img/wikiDogs/labrador.jpg"}
+[
+    {"breed":"Bulldog","image":"../img/wikiDogs/bulldog.jpg"},
+    {"breed":"Poodle","image":"../img/wikiDogs/poodle.jpg"},
+    {"breed":"Shih Tzu","image":"../img/wikiDogs/shihtzu.jpg"},
+    {"breed":"Borzoi","image":"../img/wikiDogs/borzoi.jpg"},
+    {"breed":"Shiba Inu","image":"../img/wikiDogs/shibainu.jpg"},
+    {"breed":"Golden Retriever","image":"../img/wikiDogs/goldenretriever.jpg"},
+    {"breed":"Pug","image":"../img/wikiDogs/pug.jpg"},
+    {"breed":"Husky","image":"../img/wikiDogs/husky.jpeg"},
+    {"breed":"Corgi","image":"../img/wikiDogs/corgi.jpg"},
+    {"breed":"Chihuahua","image":"../img/wikiDogs/chihuahua.jpg"},
+    {"breed":"Dalmatian","image":"../img/wikiDogs/dalmatian.jpg"},
+    {"breed":"Beagle","image":"../img/wikiDogs/beagle.jpg"},
+    {"breed":"Yorkshire","image":"../img/wikiDogs/yorkshire.jpg"},
+    {"breed":"Pomeranian","image":"../img/wikiDogs/pomeranian.jpeg"},
+    {"breed":"Labrador","image":"../img/wikiDogs/labrador.jpg"}
+]
