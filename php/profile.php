@@ -10,6 +10,12 @@
             text-decoration: none;
             color: white;
         }
+
+        .profile-edit a
+        {
+            text-decoration: none;
+            color: transparent;
+        }
     </style>
 </head>
 <body>
@@ -53,13 +59,8 @@
 
         <div class="profile-edit">
             <h2>Edit Profile Details:</h2>
-            <form id="editProfileForm" onsubmit="return editProfile()">
-                <label for="newUsername">New Username:</label>
-                <input type="text" id="newUsername" name="newUsername" placeholder="new username" required><br><br>
-                <label for="newPassword">New Password:</label>
-                <input type="password" id="newPassword" name="newPassword" placeholder="new password" required><br><br>
-                <button type="submit">Update Profile</button>
-            </form>
+                <a href="profile_usernameedit.php"><button>Update username</button></a>
+                <a href="profile_passwordedit.php"><button>Update password</button></a>
         </div>
     </div>
 
