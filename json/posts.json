@@ -7,7 +7,20 @@
         "tags": [
             "bulldog"
         ],
-        "comments": []
+        "comments": [
+            {
+                "username": "anotha one",
+                "text": "123"
+            },
+            {
+                "username": "anotha one",
+                "text": "456"
+            },
+            {
+                "username": "anotha one",
+                "text": "789"
+            }
+        ]
     },
     {
         "id": "66749e8684451",
@@ -157,7 +170,12 @@
         "tags": [
             "shih tzu"
         ],
-        "comments": []
+        "comments": [
+            {
+                "username": "anotha one",
+                "text": "BALLS MENTIONED"
+            }
+        ]
     },
     {
         "id": "667e238e117ac",

@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p id="modalText"></p>
                 <p id="modalUsername"></p>
                 <p id="modalTags"></p>
-                <form id="commentForm" method="post" action="index.php">
+                <form id="commentForm" method="post" action="index.php" onsubmit="submitComment(event)">
                     <input type="hidden" name="comment_post_id" id="commentPostId">
                     <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
                     <br>
@@ -300,46 +300,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    function displayComments(comments) {
-        const commentsSection = document.getElementById('commentsSection');
-        commentsSection.innerHTML = ''; // Clear previous comments
-        const parsedComments = JSON.parse(comments);
-        parsedComments.forEach(comment => {
-            const commentDiv = document.createElement('div');
-            commentDiv.className = 'comment';
-            const commentText = document.createElement('p');
-            commentText.innerText = comment.text;
-            const commentUser = document.createElement('p');
-            commentUser.innerText = 'Comment by: ' + comment.username;
-            commentDiv.appendChild(commentText);
-            commentDiv.appendChild(commentUser);
-            commentsSection.appendChild(commentDiv);
-        });
-    }
+    window.submitComment = function(event) {
+        event.preventDefault(); // Prevent form from submitting normally
+        const postId = document.getElementById('commentPostId').value;
+        const commentText = document.getElementById('commentText').value;
 
-    document.getElementById('commentsSection').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const commentText = document.getElementById('commentText').value.trim();
-        const commentPostId = document.getElementById('commentPostId').value;
-        if (commentText) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'index.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const newComment = {
-                        username: '<?php echo $username; ?>',
-                        text: commentText
-                    };
-                    const commentsArray = JSON.parse(xhr.responseText);
-                    commentsArray.push(newComment);
-                    displayComments(JSON.stringify(commentsArray));
-                    document.getElementById('commentText').value = ''; 
-                }
-            };
-            xhr.send('comment_post_id=' + encodeURIComponent(commentPostId) + '&comment_text=' + encodeURIComponent(commentText));
+        if (commentText.trim() === '') {
+            alert('Comment cannot be empty');
+            return;
         }
-    });
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'add_comment.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const newComment = JSON.parse(xhr.responseText);
+                const commentDiv = document.createElement('div');
+                commentDiv.textContent = newComment.username + ": " + newComment.text;
+                document.getElementById('commentsSection').appendChild(commentDiv);
+                document.getElementById('commentText').value = ''; // Clear the textarea
+            }
+        };
+        xhr.send('comment_post_id=' + encodeURIComponent(postId) + '&comment_text=' + encodeURIComponent(commentText));
+    };
     </script>
 </body>
 </html>
