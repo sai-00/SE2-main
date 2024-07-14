@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <section class="main-content">
 
-        <div id="myModal" class="modal">
+    <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <img id="modalImage" src="" alt="Modal Image">
@@ -255,6 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                         echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                         echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
+                        echo "<button onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "'); return false;\">Comment</button>";
                         echo "</div>"; 
                         echo "</div>"; 
                     }
@@ -316,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     }
 
-    document.getElementById('commentForm').addEventListener('submit', function(event) {
+    document.getElementById('commentsSection').addEventListener('submit', function(event) {
         event.preventDefault();
         const commentText = document.getElementById('commentText').value.trim();
         const commentPostId = document.getElementById('commentPostId').value;
@@ -339,20 +340,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             xhr.send('comment_post_id=' + encodeURIComponent(commentPostId) + '&comment_text=' + encodeURIComponent(commentText));
         }
     });
-
-    function openModal(image, text, id, comments, username, tags) {
-        document.getElementById('modalImage').src = image;
-        document.getElementById('modalText').textContent = text;
-        document.getElementById('modalUsername').textContent = 'Posted by: ' + username;
-        document.getElementById('modalTags').textContent = 'Tags: ' + JSON.parse(tags).join(', ');
-        document.getElementById('commentPostId').value = id;
-        displayComments(comments);
-        document.getElementById('myModal').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('myModal').style.display = 'none';
-    }
     </script>
 </body>
 </html>
