@@ -78,6 +78,7 @@ foreach ($posts as $post) {
             max-width: 300px;
             display: inline-block;
             vertical-align: top;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);  
         }
 
         .post-card img {
@@ -121,6 +122,11 @@ foreach ($posts as $post) {
             margin: 20px 0;
             text-align: center;
         }
+
+        .modal img
+        {
+            
+        }
     </style>
 </head>
 <body>
@@ -158,9 +164,9 @@ foreach ($posts as $post) {
                 <div class="post-card" onclick="openModal('<?php echo htmlspecialchars($post['image']); ?>', '<?php echo htmlspecialchars($post['text']); ?>', '<?php echo htmlspecialchars($post['id']); ?>', '<?php echo htmlspecialchars(json_encode($post['comments'])); ?>', '<?php echo htmlspecialchars($post['username']); ?>', '<?php echo htmlspecialchars(json_encode($post['tags'])); ?>')">
                     <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
                     <div class="post-content">
-                        <h3><?php echo isset($post['text']) ? htmlspecialchars($post['text']) : 'No Title'; ?></h3>
-                        <p>Post ID: <?php echo htmlspecialchars($post['id']); ?></p>
-                        <p>Tags: <?php echo implode(', ', array_map('htmlspecialchars', $post['tags'])); ?></p>
+                        <?php echo isset($post['text']) ? htmlspecialchars($post['text']) : 'No Title'; ?>
+                        <p><strong>Post ID:</strong> <?php echo htmlspecialchars($post['id']); ?></p>
+                        <p><strong>Tags:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $post['tags'])); ?></p>
                         <button>Comment</button>
                     </div>
                 </div>

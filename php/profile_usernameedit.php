@@ -88,6 +88,13 @@
                             if ($post['username'] === $username) {
                                 $post['username'] = $newUsername;
                             }
+                            if (isset($post['comments'])) {
+                                foreach ($post['comments'] as &$comment) {
+                                    if ($comment['username'] === $username) {
+                                        $comment['username'] = $newUsername;
+                                    }
+                                }
+                            }
                         }
 
                         // Save updated users and posts data to JSON files
@@ -104,9 +111,9 @@
         }
         echo '<script>';
         if ($response['success']) {
+            echo 'window.location.href = "profile.php";';
             echo 'alert("Profile updated successfully!");';
             echo 'document.getElementById("currentUsername").innerText = "' . htmlspecialchars($newUsername) . '";';
-            echo 'window.location.href = "profile.php";';
         } else {
             echo 'alert("' . htmlspecialchars($response['message']) . '");';
         }
