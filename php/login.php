@@ -32,6 +32,8 @@
                         <a href="signup.php">sign up here</a>
                     </div>
                 </form>
+                <br><br><br>
+                <a href="landing.php">Proceed without an account ? -></a>
                 </div>
             </section>
         </div>

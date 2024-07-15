@@ -31,9 +31,11 @@
                     <hr>
                     <div class="text-for-redirect">
                         <p>Already a member ?</p>
-                        <a href="login.php">login here</a>
+                        <a href="login.php">login here</a> <br><br>
                     </div>
                 </form>
+                <br><br>
+                <a href="landing.php">Proceed without an account ? -></a>
                 </div>
             </section>
         </div>
