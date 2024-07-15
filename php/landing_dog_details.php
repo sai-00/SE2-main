@@ -7,18 +7,33 @@
             text-decoration: none;
             color: white;
         }
+        .search-form
+        {
+            background-color: #dba181;
+            width: 45%;
+            max-width: 15%;
+            padding-top: 20px;
+            padding-left: 20px;
+            padding-right: 40px;
+        }
+
+        .search-form button
+        {
+            padding: 10px;
+            text-align: center;
+            width: 35%;
+        }
     </style>
 </head>
 <body>
-    <nav class="top-navbar">
+<nav class="top-navbar">
         <div class="logo">
-            <a href="index.php"><strong>Pawpedia</strong></a>
+        <a href="landing.php"><strong>Pawpedia</strong></a> 
         </div>
+
         <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="users.php">Users</a>
-            <a href="profile.php">Profile</a>
-            <a href="#" id="logout">Logout</a>
+            <a href="signup.php">Signup</a>
+            <a href="login.php">Login</a>
         </div>
     </nav>
 

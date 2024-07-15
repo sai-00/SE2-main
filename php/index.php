@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$username = $_SESSION['username'];
+
 // Define file paths
 $postsFile = '../json/posts.json';
 $dogsFile = '../json/dogs.json';
@@ -130,26 +137,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </nav>
 
-    <section class="main-content">
-
     <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
-                <img id="modalImage" src="" alt="Modal Image">
+                <center><img id="modalImage" src="" alt="Modal Image"></center>
                 <p id="modalText"></p>
                 <p id="modalUsername"></p>
                 <p id="modalTags"></p>
                 <form id="commentForm" method="post" action="index.php" onsubmit="submitComment(event)">
-                    <input type="hidden" name="comment_post_id" id="commentPostId">
-                    <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
-                    <br>
-                    <button type="submit">Comment</button>
+                     <input type="hidden" name="comment_post_id" id="commentPostId">
+                    <div class="form-parent">
+                        <div class="form-text"> 
+                            <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
+                        </div>
+                        <div class="form-button">
+                            <button type="submit">Comment</button>
+                        </div>
+                    </div>
                 </form>
                 <br><hr>
                 <h3>Comments</h3>
                 <div id="commentsSection"></div>
             </div>
         </div>
+
+    <section class="main-content">
 
         <div class="posting-form">
             <div class="search-bar">
@@ -212,13 +224,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="posts">
             <?php
-            if (!isset($_SESSION['username'])) {
-                header('Location: login.php');
-                exit;
-            }
-            
-            $username = $_SESSION['username'];
-
             if (file_exists($postsFile) || file_exists($dogsFile)) {
                 $posts = file_exists($postsFile) ? array_reverse(json_decode(file_get_contents($postsFile), true)) : [];
                 $dogs = file_exists($dogsFile) ? json_decode(file_get_contents($dogsFile), true) : [];

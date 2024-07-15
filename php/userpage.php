@@ -123,10 +123,114 @@ foreach ($posts as $post) {
             text-align: center;
         }
 
-        .modal img
-        {
-            
-        }
+    .modal 
+    {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+    }
+
+    .modal img 
+    {
+        width: 60%;
+        height: auto;
+    }
+
+    .modal-content {
+        margin: 10% auto;
+        padding: 20px;
+        width: 100%;
+        max-width:50%;
+        background-color: #fefefe;
+        position: relative;
+        background-color: #dba181;
+        border-radius: 20px;
+    }
+
+    .close {
+        color: #1b1815;
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .post {
+        margin: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 300px;
+        cursor: pointer;
+    }
+
+    .post img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .logo a
+    {
+        text-decoration: none;
+        color: white;
+    }
+
+    button
+    {
+        background-color: #7ca4e6;
+        color: white;
+        margin-bottom: 15px;
+        padding: 15px;
+        width: 30%; 
+        border: none; 
+        cursor: pointer;
+        text-align: center;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+        background-color: #6660c1; 
+        transition: 0.3s;
+    }
+
+    #commentText
+    {
+        border-radius: 20px;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    hr
+    {
+        color: #1b1815;
+    }
+
+    .form-parent
+    {
+        display: flex;
+    }
+
+    .form-text
+    {
+        flex: 1;
+    }
+
+    .form-button
+    {
+        flex: 1;
+    }
+
     </style>
 </head>
 <body>
@@ -176,19 +280,23 @@ foreach ($posts as $post) {
         <?php endif; ?>
     </section>
 
-    <!-- Modal Structure -->
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <img id="modalImage" src="" alt="Modal Image">
+            <center><img id="modalImage" src="" alt="Modal Image"></center>
             <p id="modalText"></p>
             <p id="modalUsername"></p>
             <p id="modalTags"></p>
             <form id="commentForm" method="post" action="index.php" onsubmit="submitComment(event)">
                 <input type="hidden" name="comment_post_id" id="commentPostId">
-                <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
-                <br>
-                <button type="submit">Comment</button>
+                <div class="form-parent">
+                        <div class="form-text"> 
+                            <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
+                        </div>
+                        <div class="form-button">
+                            <button type="submit">Comment</button>
+                        </div>
+                    </div>
             </form>
             <br><hr>
             <h3>Comments</h3>

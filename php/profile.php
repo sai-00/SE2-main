@@ -16,6 +16,27 @@
             text-decoration: none;
             color: transparent;
         }
+
+        .profile-edit button
+        {
+            background-color: #7ca4e6;
+            color: white;
+            margin: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            width: 100%; 
+            border: none; 
+            cursor: pointer;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-edit button:hover
+        {
+            background-color: #6660c1; 
+            transition: 0.3s;
+        }
     </style>
 </head>
 <body>
