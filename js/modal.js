@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalImage.src = imageSrc;
         modalText.textContent = text;
         modalUsername.textContent = "Posted by: " + username;
-        modalTags.textContent = "Tags: " + tags;
+        modalTags.textContent = "Tags: " + JSON.parse(tags).join(", "); // Updated to parse JSON
         commentPostId.value = postId;
 
         commentsSection.innerHTML = ''; // Clear existing comments
@@ -37,20 +37,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 });
-
-function displayComments(comments) {
-    const commentsSection = document.getElementById('commentsSection');
-    commentsSection.innerHTML = ''; // Clear previous comments
-    const parsedComments = JSON.parse(comments);
-    parsedComments.forEach(comment => {
-        const commentDiv = document.createElement('div');
-        commentDiv.className = 'comment';
-        const commentText = document.createElement('p');
-        commentText.innerText = comment.text;
-        const commentUser = document.createElement('p');
-        commentUser.innerText = 'Comment by: ' + comment.username;
-        commentDiv.appendChild(commentText);
-        commentDiv.appendChild(commentUser);
-        commentsSection.appendChild(commentDiv);
-    });
-}
