@@ -23,10 +23,11 @@
                 </div>
 
                 <div class="signup-box">
-                <form method="POST" action="signup.php">
+                <form method="POST" action="signup.php" onsubmit="return validateForm()">
                     <h1>Register</h1>
                     <input type="text" placeholder="Username" name="Username" id="Username">
                     <input type="password" placeholder="Password" name="Password" id="Password">
+                    <input type="password" placeholder="Confirm Password" name="confirmPassword" id="confirmPassword">
                     <button type="submit">Register</button>
                     <hr>
                     <div class="text-for-redirect">
@@ -71,5 +72,17 @@
             }
         }
         ?>
+        <script>
+        function validateForm() 
+        {
+            var password = document.getElementById('Password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return false;
+            }
+            return true;
+        }
+    </script>
     </body>
 </html>

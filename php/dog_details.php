@@ -26,7 +26,10 @@
     </nav>
 
     <div class="breadcrumb">
-        <a href="index.php"> < Back</a>
+        <?php
+        $searchTag = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
+        echo "<a href=\"index.php?search=" . urlencode($searchTag) . "\"> < Back</a>";
+        ?>
     </div>
 
     <section class="main-content">
