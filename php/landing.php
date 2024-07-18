@@ -1,14 +1,4 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['username'])) {
-    header('Location: login.php');
-    exit;
-}
-
-$username = $_SESSION['username'];
-
-// Define file paths
 $postsFile = '../json/posts.json';
 $dogsFile = '../json/dogs.json';
 
@@ -121,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Pawpedia - Home</title>
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/modal.css">
-    <script src="../js/modal.js"></script>
     <style>
         .search-form {
             background-color: #dba181;
@@ -138,13 +127,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 50%;
         }
 
-        #advanced_search 
-        {
+        #advanced_search {
             padding: 10px;
             border-radius: 20px;
             margin-bottom: 8px;
         }
-        
+
         .post-details p.text-preview {
             display: inline-block;
             width: 100%;
@@ -178,6 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <br><hr>
                 <h3>Comments</h3>
                 <div id="commentsSection"></div>
+                <input type="hidden" name="comment_post_id" id="commentPostId">
             </div>
         </div>
 
@@ -323,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         modalImage.src = imageSrc;
         modalText.textContent = text;
-        modalUsername.innerHTML = `Posted by: <a href="userpage.php?id=${username}">${username}</a>`;
+        modalUsername.textContent = `Posted by: ${username}`;
         modalTags.textContent = "Tags: " + JSON.parse(tags).join(', ');
         commentPostId.value = postId;
 
@@ -331,7 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const commentsArray = JSON.parse(comments).reverse(); // Reverse the comments array
         commentsArray.forEach(function(comment) {
             const commentDiv = document.createElement('div');
-            commentDiv.innerHTML = `<strong><a href="userpage.php?id=${comment.username}">${comment.username}</a></strong>: ${comment.text}`; // Username bold and clickable
+            commentDiv.textContent = `${comment.username}: ${comment.text}`; // Username and comment text
             commentsSection.appendChild(commentDiv);
         });
 
