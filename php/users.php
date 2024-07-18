@@ -24,11 +24,24 @@ if (file_exists($file)) {
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/users.css">
     <script src="../js/nav.js"></script>
+    <style>
+        #user-searchbar
+        {
+            border-radius: 20px;
+            padding: 10px;
+            width: 150%;
+            margin-left: 50px;
+        }
+    </style>
 </head>
 <body>
     <nav class="top-navbar">
         <div class="logo">
             <a href="index.php"><strong>Pawpedia</strong></a>
+        </div>
+
+        <div class="user-search">
+            <input type="text" placeholder="Search User" id="user-searchbar" data-users='<?php echo json_encode($users); ?>'>
         </div>
         
         <div class="nav-links">

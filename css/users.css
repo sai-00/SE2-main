@@ -30,10 +30,10 @@ button {
     color: white;
     margin: 10px;
     padding: 10px;
-    width: 100%; 
+    width: 50%; 
     border: none; 
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 20px;
     text-align: center;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
@@ -46,5 +46,3 @@ button:hover {
 .cardtitle {
     font-size: 1.2rem;
 }
-
-
