@@ -111,6 +111,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Save updated posts data back to JSON file
         file_put_contents($postsFile, json_encode($postsData, JSON_PRETTY_PRINT));
+
+        // Return the new comment and comment count as JSON (for AJAX response)
+        echo json_encode(['comment' => $comment, 'commentCount' => count($post['comments'])]);
+        exit;
     }
 }
 ?>
@@ -122,6 +126,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/modal.css">
     <script src="../js/modal.js"></script>
+    <style>
+        .modal a {
+            color: inherit; 
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .modal a:hover {
+            color: #7ca4e6;
+            transition: 0.3s;
+        }
+    </style>
 </head>
 <body>
     <nav class="top-navbar">
@@ -138,31 +154,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
     <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <center><img id="modalImage" src="" alt="Modal Image"></center>
-                <p id="modalText"></p>
-                <p id="modalUsername"></p>
-                <p id="modalTags"></p>
-                <form id="commentForm" method="post" action="index.php" onsubmit="submitComment(event)">
-                     <input type="hidden" name="comment_post_id" id="commentPostId">
-                    <div class="form-parent">
-                        <div class="form-text"> 
-                            <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
-                        </div>
-                        <div class="form-button">
-                            <button type="submit">Comment</button>
-                        </div>
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <center><img id="modalImage" src="" alt="Modal Image"></center>
+            <p id="modalText"></p>
+            <p id="modalUsername"></p>
+            <p id="modalTags"></p>
+            <form id="commentForm" method="post" action="index.php" onsubmit="submitComment(event)">
+                <input type="hidden" name="comment_post_id" id="commentPostId">
+                <div class="form-parent">
+                    <div class="form-text">
+                        <textarea name="comment_text" id="commentText" rows="2" cols="50" placeholder="Add a comment" required></textarea>
                     </div>
-                </form>
-                <br><hr>
-                <h3>Comments</h3>
-                <div id="commentsSection"></div>
-            </div>
+                    <div class="form-button">
+                        <button type="submit">Comment</button>
+                    </div>
+                </div>
+            </form>
+            <br><hr>
+            <h3>Comments</h3>
+            <div id="commentsSection"></div>
         </div>
+    </div>
 
     <section class="main-content">
-
         <div class="posting-form">
             <div class="search-bar">
                 <label for="search">Search a breed:</label>
@@ -227,11 +242,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (file_exists($postsFile) || file_exists($dogsFile)) {
                 $posts = file_exists($postsFile) ? array_reverse(json_decode(file_get_contents($postsFile), true)) : [];
                 $dogs = file_exists($dogsFile) ? json_decode(file_get_contents($dogsFile), true) : [];
-                
+
                 $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
 
                 echo "<div class='tiles'>";
-                
+
                 // Display wiki entry
                 if (!empty($searchTag)) {
                     foreach ($dogs as $dog) {
@@ -244,36 +259,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             echo "<br><br>";
                             echo "<p>Click 'read more' to redirect to " . htmlspecialchars($dog['breed']) . " information.</p>";
                             echo "<button onclick=\"window.location.href='dog_details.php?search=" . urlencode($dog['breed']) . "'\">Read More</button>";
-                            echo "</div>"; 
-                            echo "</div>"; 
+                            echo "</div>";
+                            echo "</div>";
                         }
                     }
                 }
-                
+
                 // Display user posts
                 foreach ($posts as $postData) {
                     if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
-                        echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
+                        $commentCount = count($postData['comments']); // Get the number of comments
+                        echo "<div class='post-tile' data-post-id='" . htmlspecialchars($postData['id']) . "' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
                         echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
                         echo "<div class='post-details'>";
                         echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
                         echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                         echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                         echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
+                        echo "<p><strong>Comments:</strong> <span class='comment-count'>$commentCount</span></p>"; // Display the number of comments
                         echo "<button onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "'); return false;\">Comment</button>";
-                        echo "</div>"; 
-                        echo "</div>"; 
+                        echo "</div>";
+                        echo "</div>";
                     }
                 }
 
-                echo "</div>"; 
+                echo "</div>";
             } else {
                 echo "<p>No posts or dog entries available.</p>";
             }
             ?>
         </div>
     </section>
-        
+
     <script>
     function logout() {
         window.location.href = "login.php";
@@ -316,15 +333,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'add_comment.php', true);
+        xhr.open('POST', 'index.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                const newComment = JSON.parse(xhr.responseText);
+                const response = JSON.parse(xhr.responseText);
+                const newComment = response.comment;
+                const commentCount = response.commentCount;
+
+                // Add new comment to the modal
                 const commentDiv = document.createElement('div');
-                commentDiv.textContent = newComment.username + ": " + newComment.text;
-                document.getElementById('commentsSection').appendChild(commentDiv);
+                commentDiv.innerHTML = `<strong><a href="userpage.php?id=${newComment.username}">${newComment.username}</a></strong>: ${newComment.text}`;
+                commentsSection.insertBefore(commentDiv, commentsSection.firstChild); // Insert the new comment at the top
                 document.getElementById('commentText').value = ''; // Clear the textarea
+
+                // Update the comment count on the post card
+                const postTile = document.querySelector(`.post-tile[data-post-id='${postId}']`);
+                const commentCountElement = postTile.querySelector('.comment-count');
+                commentCountElement.textContent = commentCount;
             }
         };
         xhr.send('comment_post_id=' + encodeURIComponent(postId) + '&comment_text=' + encodeURIComponent(commentText));

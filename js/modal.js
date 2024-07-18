@@ -12,15 +12,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         modalImage.src = imageSrc;
         modalText.textContent = text;
-        modalUsername.textContent = "Posted by: " + username;
+        modalUsername.innerHTML = `Posted by: <a href="userpage.php?id=${username}">${username}</a>`;
         modalTags.textContent = "Tags: " + JSON.parse(tags).join(", "); // Updated to parse JSON
         commentPostId.value = postId;
 
         commentsSection.innerHTML = ''; // Clear existing comments
-        const commentsArray = JSON.parse(comments);
+        const commentsArray = JSON.parse(comments).reverse(); 
         commentsArray.forEach(function(comment) {
             const commentDiv = document.createElement('div');
-            commentDiv.textContent = comment.username + ": " + comment.text;
+            commentDiv.innerHTML = `<strong><a href="userpage.php?id=${comment.username}">${comment.username}</a></strong>: ${comment.text}`; // Username bold and clickable
             commentsSection.appendChild(commentDiv);
         });
 

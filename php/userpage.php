@@ -39,7 +39,6 @@ foreach ($posts as $post) {
     <link rel="stylesheet" href="../css/users.css">
     <script src="../js/nav.js"></script>
     <style>
-        
         /* user page */
         .breadcrumb { 
             margin-top: 100px; 
@@ -121,6 +120,20 @@ foreach ($posts as $post) {
         .posts-container {
             margin: 20px 0;
             text-align: center;
+            max-height: 600px; /* Adjust the height as needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Add some padding to avoid clipping */
+        }
+
+        .modal a {
+            color: inherit; 
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .modal a:hover{
+            color: #7ca4e6;
+            transition: 0.3s;
         }
 
     .modal 
@@ -265,12 +278,13 @@ foreach ($posts as $post) {
         
         <?php if (count($user_posts) > 0): ?>
             <?php foreach ($user_posts as $post): ?>
-                <div class="post-card" onclick="openModal('<?php echo htmlspecialchars($post['image']); ?>', '<?php echo htmlspecialchars($post['text']); ?>', '<?php echo htmlspecialchars($post['id']); ?>', '<?php echo htmlspecialchars(json_encode($post['comments'])); ?>', '<?php echo htmlspecialchars($post['username']); ?>', '<?php echo htmlspecialchars(json_encode($post['tags'])); ?>')">
+                <div class="post-card" data-post-id="<?php echo htmlspecialchars($post['id']); ?>" onclick="openModal('<?php echo htmlspecialchars($post['image']); ?>', '<?php echo htmlspecialchars($post['text']); ?>', '<?php echo htmlspecialchars($post['id']); ?>', '<?php echo htmlspecialchars(json_encode($post['comments'])); ?>', '<?php echo htmlspecialchars($post['username']); ?>', '<?php echo htmlspecialchars(json_encode($post['tags'])); ?>')">
                     <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
                     <div class="post-content">
                         <?php echo isset($post['text']) ? htmlspecialchars($post['text']) : 'No Title'; ?>
                         <p><strong>Post ID:</strong> <?php echo htmlspecialchars($post['id']); ?></p>
                         <p><strong>Tags:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $post['tags'])); ?></p>
+                        <p><strong>Comments:</strong> <span class="comment-count"><?php echo count($post['comments']); ?></span></p>
                         <button>Comment</button>
                     </div>
                 </div>
@@ -304,37 +318,36 @@ foreach ($posts as $post) {
         </div>
     </div>
 
-
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('myModal');
-    const modalImage = document.getElementById('modalImage');
-    const modalText = document.getElementById('modalText');
-    const modalUsername = document.getElementById('modalUsername');
-    const modalTags = document.getElementById('modalTags');
-    const commentsSection = document.getElementById('commentsSection');
-    const commentPostId = document.getElementById('commentPostId');
-    const commentForm = document.getElementById('commentForm');
-    const commentText = document.getElementById('commentText');
+        const modal = document.getElementById('myModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalText = document.getElementById('modalText');
+        const modalUsername = document.getElementById('modalUsername');
+        const modalTags = document.getElementById('modalTags');
+        const commentsSection = document.getElementById('commentsSection');
+        const commentPostId = document.getElementById('commentPostId');
+        const commentForm = document.getElementById('commentForm');
+        const commentText = document.getElementById('commentText');
 
-    window.openModal = function(imageSrc, text, postId, comments, username, tags) {
-        console.log('Opening modal with image:', imageSrc, 'text:', text, 'username:', username, 'tags:', tags);
+        window.openModal = function(imageSrc, text, postId, comments, username, tags) {
+            console.log('Opening modal with image:', imageSrc, 'text:', text, 'username:', username, 'tags:', tags);
 
-        modalImage.src = imageSrc;
-        modalText.textContent = text;
-        modalUsername.textContent = "Posted by: " + username;
-        modalTags.textContent = "Tags: " + JSON.parse(tags).join(', ');
-        commentPostId.value = postId;
+            modalImage.src = imageSrc;
+            modalText.textContent = text;
+            modalUsername.innerHTML = `Posted by: <a href="userpage.php?id=${username}">${username}</a>`;
+            modalTags.textContent = "Tags: " + JSON.parse(tags).join(', ');
+            commentPostId.value = postId;
 
-        commentsSection.innerHTML = ''; // Clear existing comments
-        const commentsArray = JSON.parse(comments);
-        commentsArray.forEach(function(comment) {
-            const commentDiv = document.createElement('div');
-            commentDiv.textContent = comment.username + ": " + comment.text;
-            commentsSection.appendChild(commentDiv);
-        });
+            commentsSection.innerHTML = ''; // Clear existing comments
+            const commentsArray = JSON.parse(comments).reverse(); // Reverse the comments array
+            commentsArray.forEach(function(comment) {
+                const commentDiv = document.createElement('div');
+                commentDiv.innerHTML = `<strong><a href="userpage.php?id=${comment.username}">${comment.username}</a></strong>: ${comment.text}`; // Username bold and clickable
+                commentsSection.appendChild(commentDiv);
+            });
 
-        modal.style.display = "block";
+            modal.style.display = "block";
         };
 
         window.closeModal = function() {
@@ -364,15 +377,19 @@ foreach ($posts as $post) {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     const newComment = JSON.parse(xhr.responseText);
                     const commentDiv = document.createElement('div');
-                    commentDiv.textContent = newComment.username + ": " + newComment.text;
-                    commentsSection.appendChild(commentDiv);
+                    commentDiv.innerHTML = `<strong><a href="userpage.php?id=${newComment.username}">${newComment.username}</a></strong>: ${newComment.text}`; // Username bold and clickable
+                    commentsSection.insertBefore(commentDiv, commentsSection.firstChild); // Insert the new comment at the top
                     commentText.value = ''; // Clear the textarea
+
+                    // Update the comment count on the post card
+                    const postTile = document.querySelector(`.post-card[data-post-id='${postId}']`);
+                    const commentCountElement = postTile.querySelector('.comment-count');
+                    commentCountElement.textContent = parseInt(commentCountElement.textContent) + 1;
                 }
             };
             xhr.send('comment_post_id=' + encodeURIComponent(postId) + '&comment_text=' + encodeURIComponent(comment));
         };
     });
-
     </script>
 </body>
 </html>

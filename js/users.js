@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = document.createElement("div");
         card.classList.add("usersCard");
 
-        const image = document.createElement("img");
-        image.src = user.image || "../img/braver-blank-pfp.jpg"; 
-        card.appendChild(image);
+        // const image = document.createElement("img");
+        // image.src = user.image || "../img/braver-blank-pfp.jpg"; 
+        // card.appendChild(image);
 
         const name = document.createElement("h2");
         name.textContent = user.username;
