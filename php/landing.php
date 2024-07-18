@@ -119,11 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <title>Pawpedia - Home</title>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/cesiumjs/1.78/Build/Cesium/Cesium.js"></script>
     <link rel="stylesheet" href="../css/site_layout.css">
     <link rel="stylesheet" href="../css/modal.css">
-    <script src="../js/landing_modal.js"></script>
+    <script src="../js/modal.js"></script>
     <style>
         .search-form {
             background-color: #dba181;
@@ -145,6 +143,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px;
             border-radius: 20px;
             margin-bottom: 8px;
+        }
+        
+        .post-details p.text-preview {
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -239,10 +245,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 foreach ($posts as $postData) {
                     if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
                         $commentCount = count($postData['comments']); // Get the number of comments
+                        $shortText = strlen($postData['text']) > 100 ? substr($postData['text'], 0, 100) . '...' : $postData['text'];
                         echo "<div class='post-tile' data-post-id='" . htmlspecialchars($postData['id']) . "' data-post-text='" . htmlspecialchars($postData['text']) . "' data-post-tags='" . htmlspecialchars(implode(',', array_map('strtolower', $postData['tags']))) . "' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
                         echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
                         echo "<div class='post-details'>";
-                        echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
+                        echo "<p class='text-preview'>" . htmlspecialchars(substr($postData['text'], 0, 100)) . (strlen($postData['text']) > 100 ? '...' : '') . "</p>";
                         echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                         echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                         echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";

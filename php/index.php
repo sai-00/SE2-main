@@ -143,6 +143,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px;
             border-radius: 20px;
         }
+
+        .post-details p.text-preview {
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>
@@ -205,10 +213,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="Chihuahua">Chihuahua</option>
                     <option value="Husky">Husky</option>
                 </select>
-                <br>
                 <button onclick="clearBreedSearch()">Clear Breed Search</button>
             </div>
-            <br><br>
+            <br>
             <label for="advanced_search">Advanced Search:</label> <br>
             <input type="text" id="advanced_search" placeholder="Search keywords (i.e. loud)">
             <button onclick="clearAdvancedSearch()">Clear Advanced Search</button>
@@ -280,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo "<div class='post-tile' data-post-id='" . htmlspecialchars($postData['id']) . "' data-post-text='" . htmlspecialchars($postData['text']) . "' data-post-tags='" . htmlspecialchars(implode(',', array_map('strtolower', $postData['tags']))) . "' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
                         echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
                         echo "<div class='post-details'>";
-                        echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
+                        echo "<p class='text-preview'>" . htmlspecialchars(substr($postData['text'], 0, 100)) . (strlen($postData['text']) > 100 ? '...' : '') . "</p>";
                         echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                         echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                         echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
