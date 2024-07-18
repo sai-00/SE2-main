@@ -125,21 +125,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../css/modal.css">
     <script src="../js/landing_modal.js"></script>
     <style>
-        .search-form
-        {
+        .search-form {
             background-color: #dba181;
-            width: 45%;
+            width: 55%;
             max-width: 15%;
             padding-top: 20px;
             padding-left: 20px;
             padding-right: 40px;
         }
 
-        .search-form button
-        {
+        .search-form button {
             padding: 10px;
             text-align: center;
-            width: 35%;
+            width: 50%;
+        }
+
+        #advanced_search 
+        {
+            padding: 10px;
+            border-radius: 20px;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -172,8 +177,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="search-form">
             <div class="search-bar">
-                <label for="search">Search a breed:</label>
-                <select id="search" name="search">
+                <label for="search">Search a breed:</label><br><br>
+                <select id="search" name="search" onchange="searchPosts()">
                     <option value="">Select a breed</option>
                     <option value="Shih Tzu">Shih Tzu</option>
                     <option value="Shiba Inu">Shiba Inu</option>
@@ -192,23 +197,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="Husky">Husky</option>
                 </select>
                 <br>
-                <button onclick="searchPosts()">Search</button>
-                <button onclick="clearSearch()">Clear Search</button>
+                <button onclick="clearBreedSearch()">Clear Breed Search</button>
             </div>
+            <br><br>
+            <label for="advanced_search">Advanced Search:</label> <br><br>
+            <input type="text" id="advanced_search" placeholder="Search keywords (i.e. loud)">
+            <br><br>
+            <button onclick="clearAdvancedSearch()">Clear Advanced Search</button>
             <br><br>
             <div id="wiki-entry" class="wiki-entry"></div>
         </div>
 
         <div class="posts">
+            <div class='tiles' id='post-tiles'>
             <?php
             if (file_exists($postsFile) || file_exists($dogsFile)) {
                 $posts = file_exists($postsFile) ? array_reverse(json_decode(file_get_contents($postsFile), true)) : [];
                 $dogs = file_exists($dogsFile) ? json_decode(file_get_contents($dogsFile), true) : [];
-                
+
                 $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
 
-                echo "<div class='tiles'>";
-                
                 // Display wiki entry
                 if (!empty($searchTag)) {
                     foreach ($dogs as $dog) {
@@ -226,17 +234,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
                 }
-                
+
                 //display user posts
                 foreach ($posts as $postData) {
                     if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
-                        echo "<div class='post-tile' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
+                        $commentCount = count($postData['comments']); // Get the number of comments
+                        echo "<div class='post-tile' data-post-id='" . htmlspecialchars($postData['id']) . "' data-post-text='" . htmlspecialchars($postData['text']) . "' data-post-tags='" . htmlspecialchars(implode(',', array_map('strtolower', $postData['tags']))) . "' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
                         echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
                         echo "<div class='post-details'>";
                         echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
                         echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                         echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                         echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
+                        echo "<p><strong>Comments:</strong> <span class='comment-count'>$commentCount</span></p>"; // Display the number of comments
                         echo "</div>"; 
                         echo "</div>"; 
                     }
@@ -247,11 +257,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "<p>No posts or dog entries available.</p>";
             }
             ?>
+            </div>
         </div>
     </section>
         
     <script>
-    function clearSearch() {
+    function clearBreedSearch() {
+        document.getElementById('search').value = '';
         window.location.href = 'landing.php';
     }
 
@@ -262,6 +274,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             alert('Please enter a tag to search for.');
         }
+    }
+
+    function clearAdvancedSearch() {
+        document.getElementById('advanced_search').value = '';
+        filterPosts('');
+    }
+
+    function filterPosts(query) {
+        const searchTag = document.getElementById('search').value.trim().toLowerCase();
+        console.log('Search Tag:', searchTag); // Debugging
+        console.log('Query:', query); // Debugging
+
+        const tiles = document.getElementById('post-tiles').children;
+        for (let tile of tiles) {
+            const postText = tile.getAttribute('data-post-text') ? tile.getAttribute('data-post-text').toLowerCase() : '';
+            const postTags = tile.getAttribute('data-post-tags') ? tile.getAttribute('data-post-tags').toLowerCase().split(',') : [];
+            console.log('Post Tags:', postTags); // Debugging
+            console.log('Post Text:', postText); // Debugging
+
+            if ((postText.includes(query.toLowerCase())) && (searchTag === '' || postTags.includes(searchTag))) {
+                tile.style.display = 'block';
+            } else {
+                tile.style.display = 'none';
+            }
+        }
+    }
+
+    document.getElementById('advanced_search').addEventListener('input', function(event) {
+        filterPosts(event.target.value);
+    });
+
+    function openModal(imageSrc, text, postId, comments, username, tags) {
+        const modal = document.getElementById('myModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalText = document.getElementById('modalText');
+        const modalUsername = document.getElementById('modalUsername');
+        const modalTags = document.getElementById('modalTags');
+        const commentsSection = document.getElementById('commentsSection');
+        const commentPostId = document.getElementById('commentPostId');
+
+        modalImage.src = imageSrc;
+        modalText.textContent = text;
+        modalUsername.innerHTML = `Posted by: <a href="userpage.php?id=${username}">${username}</a>`;
+        modalTags.textContent = "Tags: " + JSON.parse(tags).join(', ');
+        commentPostId.value = postId;
+
+        commentsSection.innerHTML = ''; // Clear existing comments
+        const commentsArray = JSON.parse(comments).reverse(); // Reverse the comments array
+        commentsArray.forEach(function(comment) {
+            const commentDiv = document.createElement('div');
+            commentDiv.innerHTML = `<strong><a href="userpage.php?id=${comment.username}">${comment.username}</a></strong>: ${comment.text}`; // Username bold and clickable
+            commentsSection.appendChild(commentDiv);
+        });
+
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('myModal');
+        modal.style.display = "none";
     }
     </script>
 </body>

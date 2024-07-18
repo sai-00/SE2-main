@@ -137,6 +137,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #7ca4e6;
             transition: 0.3s;
         }
+
+        #advanced_search 
+        {
+            padding: 10px;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
@@ -181,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="posting-form">
             <div class="search-bar">
                 <label for="search">Search a breed:</label>
-                <select id="search" name="search">
+                <select id="search" name="search" onchange="searchPosts()">
                     <option value="">Select a breed</option>
                     <option value="Shih Tzu">Shih Tzu</option>
                     <option value="Shiba Inu">Shiba Inu</option>
@@ -200,9 +206,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="Husky">Husky</option>
                 </select>
                 <br>
-                <button onclick="searchPosts()">Search</button>
-                <button onclick="clearSearch()">Clear Search</button>
+                <button onclick="clearBreedSearch()">Clear Breed Search</button>
             </div>
+            <label for="advanced_search">Advanced Search:</label> <br>
+            <input type="text" id="advanced_search" placeholder="Search keywords (i.e. loud)">
+            <button onclick="clearAdvancedSearch()">Clear Advanced Search</button>
             <br><br>
             <h2><u>Make a post!</u></h2>
             <form action="index.php" method="post" enctype="multipart/form-data">
@@ -238,14 +246,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="posts">
+            <div class='tiles' id='post-tiles'>
             <?php
             if (file_exists($postsFile) || file_exists($dogsFile)) {
                 $posts = file_exists($postsFile) ? array_reverse(json_decode(file_get_contents($postsFile), true)) : [];
                 $dogs = file_exists($dogsFile) ? json_decode(file_get_contents($dogsFile), true) : [];
 
                 $searchTag = isset($_GET['search']) ? strtolower(htmlspecialchars($_GET['search'])) : '';
-
-                echo "<div class='tiles'>";
 
                 // Display wiki entry
                 if (!empty($searchTag)) {
@@ -269,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 foreach ($posts as $postData) {
                     if ($postData && is_array($postData) && (empty($searchTag) || in_array($searchTag, array_map('strtolower', $postData['tags'])))) {
                         $commentCount = count($postData['comments']); // Get the number of comments
-                        echo "<div class='post-tile' data-post-id='" . htmlspecialchars($postData['id']) . "' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
+                        echo "<div class='post-tile' data-post-id='" . htmlspecialchars($postData['id']) . "' data-post-text='" . htmlspecialchars($postData['text']) . "' data-post-tags='" . htmlspecialchars(implode(',', array_map('strtolower', $postData['tags']))) . "' onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "')\">";
                         echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
                         echo "<div class='post-details'>";
                         echo "<p>" . htmlspecialchars($postData['text']) . "</p>";
@@ -280,14 +287,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo "<button onclick=\"openModal('" . htmlspecialchars($postData['image']) . "', '" . htmlspecialchars($postData['text']) . "', '" . htmlspecialchars($postData['id']) . "', '" . htmlspecialchars(json_encode($postData['comments'])) . "', '" . htmlspecialchars($postData['username']) . "', '" . htmlspecialchars(json_encode($postData['tags'])) . "'); return false;\">Comment</button>";
                         echo "</div>";
                         echo "</div>";
+
                     }
                 }
-
-                echo "</div>";
             } else {
                 echo "<p>No posts or dog entries available.</p>";
             }
             ?>
+            </div>
         </div>
     </section>
 
@@ -309,7 +316,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     });
 
-    function clearSearch() {
+    function clearBreedSearch() {
+        document.getElementById('search').value = '';
         window.location.href = 'index.php';
     }
 
@@ -321,6 +329,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             alert('Please enter a tag to search for.');
         }
     }
+
+    function clearAdvancedSearch() {
+        document.getElementById('advanced_search').value = '';
+        filterPosts('');
+    }
+
+    function filterPosts(query) {
+        const searchTag = document.getElementById('search').value.trim().toLowerCase();
+        console.log('Search Tag:', searchTag); // Debugging
+        console.log('Query:', query); // Debugging
+
+        const tiles = document.getElementById('post-tiles').children;
+        for (let tile of tiles) {
+            const postText = tile.getAttribute('data-post-text') ? tile.getAttribute('data-post-text').toLowerCase() : '';
+            const postTags = tile.getAttribute('data-post-tags') ? tile.getAttribute('data-post-tags').toLowerCase().split(',') : [];
+            console.log('Post Tags:', postTags); // Debugging
+            console.log('Post Text:', postText); // Debugging
+
+            if ((postText.includes(query.toLowerCase())) && (searchTag === '' || postTags.includes(searchTag))) {
+                tile.style.display = 'block';
+            } else {
+                tile.style.display = 'none';
+            }
+        }
+    }
+
+    document.getElementById('advanced_search').addEventListener('input', function(event) {
+        filterPosts(event.target.value);
+    });
 
     window.submitComment = function(event) {
         event.preventDefault(); // Prevent form from submitting normally
