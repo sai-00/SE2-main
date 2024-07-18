@@ -186,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="main-content">
         <div class="posting-form">
             <div class="search-bar">
-                <label for="search">Search a breed:</label>
+                <label for="search">Search a breed:</label><br><br>
                 <select id="search" name="search" onchange="searchPosts()">
                     <option value="">Select a breed</option>
                     <option value="Shih Tzu">Shih Tzu</option>
@@ -208,6 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <br>
                 <button onclick="clearBreedSearch()">Clear Breed Search</button>
             </div>
+            <br><br>
             <label for="advanced_search">Advanced Search:</label> <br>
             <input type="text" id="advanced_search" placeholder="Search keywords (i.e. loud)">
             <button onclick="clearAdvancedSearch()">Clear Advanced Search</button>
