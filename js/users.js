@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const usersContainer = document.getElementById("user-list");
     const userSearchbar = document.getElementById('user-searchbar');
     const usersData = JSON.parse(userSearchbar.dataset.users);
+    const clearSearchBtn = document.getElementById('clear-search');
 
     if (usersData && usersData.length > 0) {
         renderUserList(usersData);
@@ -56,6 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
     userSearchbar.addEventListener('input', function(event) {
         const query = event.target.value;
         searchUsers(query);
+    });
+
+    clearSearchBtn.addEventListener('click', function() {
+        userSearchbar.value = '';
+        renderUserList(usersData);
     });
 
     // Initial render of all users

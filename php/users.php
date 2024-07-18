@@ -27,10 +27,38 @@ if (file_exists($file)) {
     <style>
         #user-searchbar
         {
+            margin-top: 8px;
             border-radius: 20px;
             padding: 10px;
-            width: 150%;
-            margin-left: 50px;
+            width: 100%;
+            margin-right: 10px;
+            margin-left: 260px;
+        }
+        #clear-search 
+        {
+            border-radius: 20px;
+            padding: 10px;
+            margin-left: 260px;
+            width: 30%;
+            cursor: pointer;
+            background-color: #7ca4e6;
+            color: white;
+            border: none;
+        }
+        #clear-search:hover 
+        {
+            background-color: #6660c1;
+            transition: 0.3s;
+        }
+        .parent-search
+        {
+            display: flex;
+        }
+        .child-search
+        {
+            flex: 1;
+            margin: 10px;
+            margin-left: 30px;
         }
     </style>
 </head>
@@ -41,7 +69,14 @@ if (file_exists($file)) {
         </div>
 
         <div class="user-search">
-            <input type="text" placeholder="Search User" id="user-searchbar" data-users='<?php echo json_encode($users); ?>'>
+            <div class="parent-search">
+                <div class="child-search">
+                    <input type="text" placeholder="Search User" id="user-searchbar" data-users='<?php echo json_encode($users); ?>'>
+                </div>
+                <div class="child-search">
+                    <button id="clear-search"> Clear Search </button>
+                </div>
+            </div>
         </div>
         
         <div class="nav-links">
@@ -56,7 +91,7 @@ if (file_exists($file)) {
 
     <script>
         const usersData = <?php echo json_encode($users); ?>;
-        console.log("Users data:", usersData); // Debugging line
+        console.log("Users data:", usersData); 
     </script>
     <script src="../js/users.js"></script>
 </body>
