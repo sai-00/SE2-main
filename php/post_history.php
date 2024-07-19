@@ -43,7 +43,7 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
             margin: auto;
         }
 
-        .breadcrumbs {
+        .breadcrumbs { 
             margin-top: -50px;
             font-size: 1.2em;
             position: absolute;
@@ -53,7 +53,7 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
             color: #333;
             text-decoration: none;
             padding: 8px;
-        }
+        }   
 
         .breadcrumbs a:hover {
             text-decoration: underline;
@@ -61,44 +61,44 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
             transition: 0.3s;
         }
 
-        .tiles {
-            margin-top: 60px;
+        .comments {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 20px;
+            overflow-y: scroll;
+            max-height: 80vh;
+            padding-right: 10px;
         }
 
-        .post-tile {
+        .comment {
+            display: flex;
+            flex-direction: column;
             background-color: #dba181;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             transition: background-color 0.3s;
-            width: calc(33.333% - 20px); /* Three columns */
         }
 
-        .post-tile img {
+        .comment img {
             max-width: 100%;
             border-radius: 8px;
             margin-bottom: 10px;
         }
 
-        .post-details p {
+        .comment p {
             margin: 0 0 10px;
         }
 
-        .post-details strong {
+        .comment strong {
             display: block;
             margin-bottom: 5px;
         }
 
-        .post-details p.text-preview {
-            display: inline-block;
-            width: 100%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+        img {
+            width: 60%;
+            height: auto;
         }
     </style>
 </head>
@@ -121,17 +121,19 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
         </div>
 
         <?php if (!empty($userPosts)): ?>
-            <div class="tiles">
-                <?php foreach ($userPosts as $post): ?>
-                    <div class="post-tile">
-                        <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
-                        <div class="post-details">
-                            <p class="text-preview"><?php echo htmlspecialchars(substr($post['text'], 0, 100)); ?><?php echo strlen($post['text']) > 100 ? '...' : ''; ?></p>
-                            <p><strong>Post ID:</strong> <?php echo htmlspecialchars($post['id']); ?></p>
-                            <p><strong>Tags:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $post['tags'])); ?></p>
+            <div class="tiles-container">
+                <div class="tiles">
+                    <?php foreach ($userPosts as $post): ?>
+                        <div class="post-tile">
+                            <center><img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image"></center>
+                            <div class="post-details">
+                                <p class="text-preview"><?php echo htmlspecialchars(substr($post['text'], 0, 100)); ?><?php echo strlen($post['text']) > 100 ? '...' : ''; ?></p>
+                                <p><strong>Post ID:</strong> <?php echo htmlspecialchars($post['id']); ?></p>
+                                <p><strong>Tags:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $post['tags'])); ?></p>
+                            </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
         <?php else: ?>
             <p>You have not made any posts yet.</p>
@@ -139,21 +141,21 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
     </section>
     <script>
         function logout() {
-        window.location.href = "login.php";
-        sessionStorage.clear();
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var logoutLink = document.getElementById('logout');
-        if (logoutLink) {
-            logoutLink.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default link behavior
-                logout(); // Call logout function
-            });
-        } else {
-            console.error('Logout link element not found.');
+            window.location.href = "login.php";
+            sessionStorage.clear();
         }
-    });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var logoutLink = document.getElementById('logout');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default link behavior
+                    logout(); // Call logout function
+                });
+            } else {
+                console.error('Logout link element not found.');
+            }
+        });
     </script>
 </body>
 </html>
