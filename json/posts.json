@@ -111,7 +111,12 @@
         "tags": [
             "bulldog"
         ],
-        "comments": []
+        "comments": [
+            {
+                "username": "paulo",
+                "text": "he got that dawg in him"
+            }
+        ]
     },
     {
         "id": "66749f8fe8ae7",
@@ -207,6 +212,10 @@
             {
                 "username": "hal",
                 "text": "pom"
+            },
+            {
+                "username": "hal",
+                "text": "cloud"
             }
         ]
     },
@@ -233,7 +242,12 @@
         "tags": [
             "bulldog"
         ],
-        "comments": []
+        "comments": [
+            {
+                "username": "paulo",
+                "text": "hear ye"
+            }
+        ]
     },
     {
         "id": "667dd6c931d59",
@@ -393,6 +407,15 @@
         "tags": [
             "corgi"
         ],
-        "comments": []
+        "comments": [
+            {
+                "username": "paulo",
+                "text": "bing chilling"
+            },
+            {
+                "username": "hal",
+                "text": "bing chilliing"
+            }
+        ]
     }
 ]

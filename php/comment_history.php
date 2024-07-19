@@ -26,7 +26,7 @@ if (file_exists($postsFile)) {
 $userComments = [];
 if (is_array($postsData)) {
     foreach ($postsData as $post) {
-        foreach ($post['comments'] as $comment) {
+        foreach (array_reverse($post['comments']) as $comment) { // Reverse the comments array here
             if ($comment['username'] === $username) {
                 $userComments[] = [
                     'postText' => $post['text'],
