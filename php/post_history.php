@@ -37,24 +37,23 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
     <title>Pawpedia - Post History</title>
     <link rel="stylesheet" href="../css/site_layout.css">
     <style>
-.main-content {
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-}
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-.breadcrumbs { 
-        margin-bottom: 20px;
+        .breadcrumbs {
+            margin-top: -50px;
             font-size: 1.2em;
+            position: absolute;
         }
 
         .breadcrumbs a {
             color: #333;
-    text-decoration: none;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-        }   
+            text-decoration: none;
+            padding: 8px;
+        }
 
         .breadcrumbs a:hover {
             text-decoration: underline;
@@ -62,46 +61,45 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
             transition: 0.3s;
         }
 
-.tiles {
-    margin-top: 100px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
+        .tiles {
+            margin-top: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
-.post-tile {
-    background-color: #dba181;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: background-color 0.3s;
-    width: calc(33.333% - 20px); /* Three columns */
-}
+        .post-tile {
+            background-color: #dba181;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: background-color 0.3s;
+            width: calc(33.333% - 20px); /* Three columns */
+        }
 
-.post-tile img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
+        .post-tile img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
 
-.post-details p {
-    margin: 0 0 10px;
-}
+        .post-details p {
+            margin: 0 0 10px;
+        }
 
-.post-details strong {
-    display: block;
-    margin-bottom: 5px;
-}
+        .post-details strong {
+            display: block;
+            margin-bottom: 5px;
+        }
 
-.post-details p.text-preview {
-    display: inline-block;
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
+        .post-details p.text-preview {
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>

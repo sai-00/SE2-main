@@ -46,22 +46,22 @@ if (is_array($postsData)) {
     <title>Pawpedia - Comment History</title>
     <link rel="stylesheet" href="../css/site_layout.css">
     <style>
+        .main-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-.main-content {
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.breadcrumbs { 
-    margin-bottom: 20px;
-    font-size: 1.2em;
+        .breadcrumbs { 
+            margin-top: -50px;
+            font-size: 1.2em;
+            position: absolute;
         }
 
         .breadcrumbs a {
             color: #333;
-    text-decoration: none;
-    padding: 8px;
+            text-decoration: none;
+            padding: 8px;
         }   
 
         .breadcrumbs a:hover {
@@ -70,47 +70,45 @@ if (is_array($postsData)) {
             transition: 0.3s;
         }
 
-.comments {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: scroll;
-    max-height: 80vh;
-    padding-right: 10px;
-}
+        .comments {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: scroll;
+            max-height: 80vh;
+            padding-right: 10px;
+        }
 
-.comment {
-    display: flex;
-    flex-direction: column;
-    background-color: #dba181;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: background-color 0.3s;
-}
+        .comment {
+            display: flex;
+            flex-direction: column;
+            background-color: #dba181;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: background-color 0.3s;
+        }
 
-.comment img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
+        .comment img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
 
-.comment p {
-    margin: 0 0 10px;
-}
+        .comment p {
+            margin: 0 0 10px;
+        }
 
-.comment strong {
-    display: block;
-    margin-bottom: 5px;
-}
+        .comment strong {
+            display: block;
+            margin-bottom: 5px;
+        }
 
-img
-{
-    width: 60%;
-    height: auto;
-}
-
+        img {
+            width: 60%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
