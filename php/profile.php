@@ -11,7 +11,7 @@
             color: white;
         }
 
-        .profile-edit a
+        .profile-edit a, .post-history a
         {
             text-decoration: none;
             color: transparent;
@@ -32,10 +32,29 @@
             box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .profile-edit button:hover
+        .post-history button
+        {
+            background-color: #7ca4e6;
+            color: white;
+            margin-top: 20px;
+            padding: 15px;
+            width: 55%; 
+            border: none; 
+            cursor: pointer;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-edit button:hover, .post-history button:hover
         {
             background-color: #6660c1; 
             transition: 0.3s;
+        }
+
+        .post-history
+        {
+            margin-left: 120px;
         }
     </style>
 </head>
@@ -78,8 +97,14 @@
             </div>
         </div>
 
+        <div class="post-history">
+            <strong>View post history:</strong><br>
+            <a href="post_history.php"><button>Post history</button></a>
+            <a href="comment_history.php"><button>Comment history</button></a>
+        </div>
+
         <div class="profile-edit">
-            <h2>Edit Profile Details:</h2>
+            <strong>Edit Profile Details:</strong><br>
                 <a href="profile_usernameedit.php"><button>Update username</button></a>
                 <a href="profile_passwordedit.php"><button>Update password</button></a>
         </div>
