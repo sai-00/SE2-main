@@ -127,7 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 50%;
         }
 
-        #advanced_search {
+        #advanced_search 
+        {
             padding: 10px;
             border-radius: 20px;
             margin-bottom: 8px;
@@ -313,7 +314,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         modalImage.src = imageSrc;
         modalText.textContent = text;
         modalUsername.textContent = `Posted by: ${username}`;
-        modalTags.textContent = "Tags: " + JSON.parse(tags).join(', ');
+        const tagArray = JSON.parse(tags);
+        modalTags.innerHTML = "Tags: " + tagArray.map(tag => `<a href="landing.php?search=${encodeURIComponent(tag)}">${tag}</a>`).join(", ");
         commentPostId.value = postId;
 
         commentsSection.innerHTML = ''; // Clear existing comments

@@ -288,7 +288,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo "<img src='" . htmlspecialchars($postData['image']) . "' alt='Post Image'>";
                         echo "<div class='post-details'>";
                         echo "<p class='text-preview'>" . htmlspecialchars(substr($postData['text'], 0, 100)) . (strlen($postData['text']) > 100 ? '...' : '') . "</p>";
-                        echo "<p><strong>Post ID:</strong> " . htmlspecialchars($postData['id']) . "</p>";
                         echo "<p><strong>Posted by:</strong> " . htmlspecialchars($postData['username']) . "</p>";
                         echo "<p><strong>Tags:</strong> " . implode(', ', array_map('strtolower', $postData['tags'])) . "</p>";
                         echo "<p><strong>Comments:</strong> <span class='comment-count'>$commentCount</span></p>"; // Display the number of comments

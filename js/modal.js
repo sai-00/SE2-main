@@ -13,7 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
         modalImage.src = imageSrc;
         modalText.textContent = text;
         modalUsername.innerHTML = `Posted by: <a href="userpage.php?id=${username}">${username}</a>`;
-        modalTags.textContent = "Tags: " + JSON.parse(tags).join(", "); // Updated to parse JSON
+
+        const tagArray = JSON.parse(tags);
+        modalTags.innerHTML = "Tags: " + tagArray.map(tag => `<a href="index.php?search=${encodeURIComponent(tag)}">${tag}</a>`).join(", ");
         commentPostId.value = postId;
 
         commentsSection.innerHTML = ''; // Clear existing comments
