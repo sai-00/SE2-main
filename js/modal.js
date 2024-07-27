@@ -13,21 +13,25 @@ document.addEventListener('DOMContentLoaded', function() {
         modalImage.src = imageSrc;
         modalText.textContent = text;
         modalUsername.innerHTML = `Posted by: <a href="userpage.php?id=${username}">${username}</a>`;
-
         const tagArray = JSON.parse(tags);
         modalTags.innerHTML = "Tags: " + tagArray.map(tag => `<a href="index.php?search=${encodeURIComponent(tag)}">${tag}</a>`).join(", ");
         commentPostId.value = postId;
+        
+        var img = document.getElementById('modalImage');//new code--------------------------------
+        var randomTilt = (Math.random() * 4 - 2); 
+        img.style.transform = 'rotate(' + randomTilt + 'deg)';//end---
 
         commentsSection.innerHTML = ''; // Clear existing comments
         const commentsArray = JSON.parse(comments).reverse(); 
         commentsArray.forEach(function(comment) {
             const commentDiv = document.createElement('div');
-            commentDiv.innerHTML = `<strong><a href="userpage.php?id=${comment.username}">${comment.username}</a></strong>: ${comment.text}`; // Username bold and clickable
+            commentDiv.innerHTML = `<div class="comment-box"><strong><a href="userpage.php?id=${comment.username}">${comment.username}</a></strong>: ${comment.text}</div>`; // Username bold and clickable
             commentsSection.appendChild(commentDiv);
         });
 
         modal.style.display = "block";
     };
+
 
     window.closeModal = function() {
         modal.style.display = "none";
@@ -38,4 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     };
+
+    
+    
 });

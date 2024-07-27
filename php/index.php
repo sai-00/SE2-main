@@ -170,8 +170,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <center><img id="modalImage" src="" alt="Modal Image"></center>
-            <p id="modalText"></p>
+            <center><img id="modalImage" src="" alt="Modal Image">
+            <p id="modalText"></p></center>
             <p id="modalUsername"></p>
             <p id="modalTags"></p>
             <form id="commentForm" method="post" action="index.php" onsubmit="submitComment(event)">
@@ -194,6 +194,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="main-content">
         <div class="posting-form">
             <div class="search-bar">
+                <div class="search-container"> <!--new div------------------------------ -->
+                <br>
                 <label for="search">Search a breed:</label><br><br>
                 <select id="search" name="search" onchange="searchPosts()">
                     <option value="">Select a breed</option>
@@ -214,12 +216,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="Husky">Husky</option>
                 </select>
                 <button onclick="clearBreedSearch()">Clear Breed Search</button>
+                <br><br></div><!--new------------------------------ -->
             </div>
+            <div class="search-container"> <!--new div------------------------------ -->
             <br>
             <label for="advanced_search">Advanced Search:</label> <br>
             <input type="text" id="advanced_search" placeholder="Search keywords (i.e. loud)">
             <button onclick="clearAdvancedSearch()">Clear Advanced Search</button>
-            <br><br>
+            <br><br></div><!--new------------------------------ -->
+            <br>
+            <div class="search-container"> <!--new div------------------------------ -->
+            <br>
             <h2><u>Make a post!</u></h2>
             <form action="index.php" method="post" enctype="multipart/form-data">
                 <textarea name="text" id="text" rows="4" cols="50" placeholder="Enter your text" required></textarea>
@@ -248,6 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </select>
                 <br><br>
                 <button type="submit">Post</button>
+                </div>
             </form>
             <br><br>
             <div id="wiki-entry" class="wiki-entry"></div>

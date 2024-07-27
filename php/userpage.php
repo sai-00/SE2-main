@@ -282,7 +282,6 @@ foreach ($posts as $post) {
                     <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
                     <div class="post-content">
                         <?php echo isset($post['text']) ? htmlspecialchars($post['text']) : 'No Title'; ?>
-                        <p><strong>Post ID:</strong> <?php echo htmlspecialchars($post['id']); ?></p>
                         <p><strong>Tags:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $post['tags'])); ?></p>
                         <p><strong>Comments:</strong> <span class="comment-count"><?php echo count($post['comments']); ?></span></p>
                         <button>Comment</button>

@@ -128,7 +128,6 @@ $userPosts = array_filter($postsData, function($post) use ($username) {
                             <center><img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image"></center>
                             <div class="post-details">
                                 <p class="text-preview"><?php echo htmlspecialchars(substr($post['text'], 0, 100)); ?><?php echo strlen($post['text']) > 100 ? '...' : ''; ?></p>
-                                <p><strong>Post ID:</strong> <?php echo htmlspecialchars($post['id']); ?></p>
                                 <p><strong>Tags:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $post['tags'])); ?></p>
                             </div>
                         </div>

@@ -8,6 +8,7 @@ body
     flex-direction: column; 
     overflow: hidden;
     background-color: #efe6d4;
+    font-size: 1.2rem;
 }
 
 nav.top-navbar 
@@ -43,6 +44,8 @@ nav.top-navbar
 {
     color: #cb7615; 
 }
+
+
 
 .content-container 
 {
@@ -121,6 +124,12 @@ div.search-bar
     transition: 0.3s;
 }
 
+.search-container{ /*new--------------------------------------------*/
+    background-color: #eccdbd;
+    width: auto;
+    border-radius: 5px;
+}
+
 div.posting-form
 {
     padding: 15px;
@@ -164,8 +173,8 @@ div.posting-form
     cursor: pointer;
 }
 
-.post-tile.wiki-entry-tile {
-    background-color: #dba181; /* Adjusted background color */
+.post-tile.wiki-entry-tile {/*updated color--------------------------------*/
+    background-color: #eccdbd; /* Adjusted background color */
 }
 
 .post-tile img {

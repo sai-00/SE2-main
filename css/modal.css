@@ -14,6 +14,9 @@
 {
     width: 60%;
     height: auto;
+    border: 15px solid white; /* new lines -----------------------------------------*/
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
 .modal-content {
@@ -25,6 +28,8 @@
     position: relative;
     background-color: #dba181;
     border-radius: 20px;
+    border: 15px solid #efe6d4; /* new lines -------------------------------------------*/
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
 .close {
@@ -77,6 +82,15 @@ button:hover {
     background-color: #6660c1; 
     transition: 0.3s;
 }
+.comment-box{ /* new shit --------------------------------*/
+    width: fit-content;
+    border: 10px solid #7ca4e6;
+    border-radius: 20px;
+    margin: 10px;
+    background-color: #7ca4e6;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
 
 #commentText
 {
@@ -104,3 +118,4 @@ hr
 {
     flex: 1;
 }
+
